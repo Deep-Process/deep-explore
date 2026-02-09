@@ -1,9 +1,8 @@
-# Exploration Report Template
+# Exploration Report Template V3.0
 
 ```
 ╔═══════════════════════════════════════════════════════════════════════════╗
-║                      DEEP EXPLORE REPORT                                   ║
-║                      Version 2.1.1                                         ║
+║                      DEEP EXPLORE V3.0 REPORT                              ║
 ╠═══════════════════════════════════════════════════════════════════════════╣
 ║                                                                            ║
 ║  DECISION: [one sentence from Step 0]                                      ║
@@ -12,8 +11,15 @@
 ║  DEPTH: [quick | standard | deep]                                          ║
 ║  FEAR ANALYSIS: [on | off] (auto-detected)                                 ║
 ║                                                                            ║
-║  COVERAGE SCORE: [C] points - [COMPREHENSIVE/ADEQUATE/PARTIAL/INSUFFICIENT]║
+║  COVERAGE SCORE: [C] points — [COMPREHENSIVE/ADEQUATE/PARTIAL/INSUFFICIENT]║
 ║  QUALITY GATE: [PASSED / FAILED]                                           ║
+║                                                                            ║
+║  PROCESS INTEGRITY:                                                        ║
+║  ├── Gates passed: [N]/7                                                   ║
+║  ├── Scope reductions: [N]                                                 ║
+║  ├── Counter-checks: [N]                                                   ║
+║  ├── Assumptions declared: [N]                                             ║
+║  └── EVR compliance: [N]/7 phases                                          ║
 ║                                                                            ║
 ║  QUALITY METRICS:                                                          ║
 ║  ├── Verification ratio: [X]% (required: [Y]%)                            ║
@@ -29,15 +35,15 @@
 ══════════════════════════════════════════════════════════════════════════════
 
 KEY DISCOVERIES:
-• [discovery 1] - impact: ___
-• [discovery 2] - impact: ___
-• [discovery 3] - impact: ___
+• [discovery 1] — impact: ___ — status: VERIFIED/ASSUMED
+• [discovery 2] — impact: ___ — status: VERIFIED/ASSUMED
+• [discovery 3] — impact: ___ — status: VERIFIED/ASSUMED
 
 SURPRISES:
 • [what was unexpected]
 
 CHANGED ASSUMPTIONS:
-• Original: ___ → Now: ___
+• Original: ___ → Now: ___ — evidence: ___
 
 
 ══════════════════════════════════════════════════════════════════════════════
@@ -45,32 +51,32 @@ CHANGED ASSUMPTIONS:
 ══════════════════════════════════════════════════════════════════════════════
 
 CRITICAL UNKNOWNS:
-• [unknown] - how to learn: ___
+• [unknown] — how to learn: ___
 
 TRUE UNCERTAINTIES (cannot know):
-• [uncertainty] - must decide despite this
+• [uncertainty] — must decide despite this
 
 FLAGGED FOR EXPERT:
-• [question] - expert type: ___
+• [question] — expert type: ___
 
 
 ══════════════════════════════════════════════════════════════════════════════
  SECTION 3: OPTION MAP
 ══════════════════════════════════════════════════════════════════════════════
 
-DIMENSION 1: [name]
+DIMENSION 1: [name] — status: [VERIFIED/ASSUMED]
 ├── Option A: [description]
 ├── Option B: [description]
 └── Option C: [description]
 
-DIMENSION 2: [name]
+DIMENSION 2: [name] — status: [VERIFIED/ASSUMED]
 ├── Option A: [description]
 └── Option B: [description]
 
 [... more dimensions ...]
 
 CONSTRAINTS:
-• [constraint] - confidence: ___
+• [constraint] — confidence: ___ — status: [VERIFIED/ASSUMED]
 
 VALID COMBINATIONS: [N] of [total]
 
@@ -97,14 +103,14 @@ CLUSTER B: "[name]"
 ══════════════════════════════════════════════════════════════════════════════
 
 CLUSTER A:
-├── ✓ [verified consequence]
-├── ? [assumed consequence] - confidence: ___
-└── ✗ [risk] - probability: ___
+├── ✓ [verified consequence] — source: [ref]
+├── ? [assumed consequence] — confidence: ___
+└── ✗ [risk] — probability: ___
 
 CLUSTER B:
-├── ✓ [verified consequence]
-├── ? [assumed consequence] - confidence: ___
-└── ✗ [risk] - probability: ___
+├── ✓ [verified consequence] — source: [ref]
+├── ? [assumed consequence] — confidence: ___
+└── ✗ [risk] — probability: ___
 
 
 ══════════════════════════════════════════════════════════════════════════════
@@ -154,13 +160,7 @@ ORIGINAL FEARS (from Step 0):
 ├────────────────────────────────┼─────────────┼────────────────────────────┤
 │ [fear 1]                       │ STR/OPR/COG │ RESOLVED/ADDRESSED/REMAINS │
 │ [fear 2]                       │ STR/OPR/COG │ RESOLVED/ADDRESSED/REMAINS │
-│ [fear 3]                       │ STR/OPR/COG │ RESOLVED/ADDRESSED/REMAINS │
 └────────────────────────────────┴─────────────┴────────────────────────────┘
-
-RESOLUTION KEY:
-• RESOLVED = Evidence shows fear was unfounded
-• ADDRESSED = Mitigation plan exists
-• REMAINS = True risk, accepted or pivoted
 
 MINIMAL TESTS DESIGNED:
 • [test 1] → learns: [what success/failure teaches]
@@ -178,6 +178,38 @@ CONTROL ZONE CLARITY:
 WALLS ANALYSIS:
 • False walls cleared: [blockers that weren't real]
 • True walls confirmed: [real limits, saved wasted effort]
+
+
+══════════════════════════════════════════════════════════════════════════════
+ SECTION 9: PROCESS INTEGRITY (V3.0)
+══════════════════════════════════════════════════════════════════════════════
+
+ENFORCEMENT COMPLIANCE:
+┌─────────────────────────────┬────────┬──────────────────────────┐
+│ Phase                       │ Status │ Notes                    │
+├─────────────────────────────┼────────┼──────────────────────────┤
+│ Phase 0: ASSUMPTIONS_DECLARED│ Y/N   │ count: ___               │
+│ Phase 0: EVR Sequence        │ Y/N   │                          │
+│ Phase 0: Checklist           │ PASS/F │                          │
+│ Phase 0: Gate                │ OPEN/L │                          │
+│ Phase 1: ASSUMPTIONS_DECLARED│ Y/N   │ count: ___               │
+│ Phase 1: EVR Sequence        │ Y/N   │                          │
+│ Phase 1: Counter-checks      │ Y/N   │ count: ___               │
+│ Phase 1: Checklist           │ PASS/F │                          │
+│ Phase 1: Gate                │ OPEN/L │                          │
+│ [... phases 2-6 ...]        │        │                          │
+└─────────────────────────────┴────────┴──────────────────────────┘
+
+SCOPE REDUCTIONS:
+• [SR-1]: gate: ___, item: ___, reason: ___, impact: ___
+• [SR-2]: ...
+• (if none: "No scope reductions — full compliance")
+
+ASSUMPTIONS FINAL STATUS:
+• Total declared: [count]
+• Confirmed: [count]
+• Falsified: [count]
+• Still hypothetical: [count]
 
 
 ══════════════════════════════════════════════════════════════════════════════
@@ -205,6 +237,8 @@ SCORING BREAKDOWN:
 │ Premortem causes            │ [N]    │ [×0.5] │
 │ Black swans                 │ [N]    │ [×0.5] │
 │ Biases checked              │ [N]    │ [×0.3] │
+│ Gates passed clean          │ [N]    │ [×1.0] │
+│ Counter-checks              │ [N]    │ [×0.5] │
 ├─────────────────────────────┼────────┼────────┤
 │ TOTAL                       │        │ [sum]  │
 └─────────────────────────────┴────────┴────────┘
@@ -212,6 +246,7 @@ SCORING BREAKDOWN:
 QUALITY GATE CHECK:
 • Verification ratio: [verified/(verified+assumed)]% — [✓/✗]
 • Minimums met: [all/partial/none] — [✓/✗]
+• Counter-checks met: [Y/N] — [✓/✗]
 
 Limitations:
 • [what wasn't explored]

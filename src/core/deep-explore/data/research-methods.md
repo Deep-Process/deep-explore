@@ -18,7 +18,7 @@
 **Best for:** Current state, recent changes, comparisons
 
 ```
-□ Add year to query (e.g., "TypeScript Azure 2025")
+□ Add year to query (e.g., "TypeScript Azure 2026")
 □ Check official sources first
 □ Multiple sources for consensus
 □ Note conflicts
@@ -28,6 +28,7 @@ OUTPUT:
 Finding: ___
 Source: [url]
 Confidence: [HIGH/MED/LOW]
+Status: [VERIFIED/ASSUMED]
 ```
 
 ### DOCUMENTATION
@@ -45,6 +46,7 @@ OUTPUT:
 Finding: ___
 Source: [url]
 Version: ___
+Status: [VERIFIED/ASSUMED]
 ```
 
 ### EXPERIMENT
@@ -62,6 +64,7 @@ OUTPUT:
 Question: ___
 Result: [SUCCESS/FAILURE/PARTIAL]
 Evidence: ___
+Status: VERIFIED (experiments produce direct evidence)
 ```
 
 ### EXPERT (flag for user)
@@ -78,6 +81,7 @@ OUTPUT:
 Questions: ___
 Expert type: ___
 Blocked: [what decisions wait on this]
+Status: ASSUMED (until expert responds)
 ```
 
 ---
@@ -90,6 +94,7 @@ Blocked: [what decisions wait on this]
 □ Multiple sources agree (or conflict noted)
 □ Specific enough to use
 □ Source recorded
+□ Status tagged: VERIFIED or ASSUMED
 ```
 
 ---
@@ -99,6 +104,6 @@ Blocked: [what decisions wait on this]
 | Situation | Action |
 |-----------|--------|
 | No info found | Mark TRUE UNKNOWN |
-| Conflicting info | Note both, reduce confidence |
-| Old info | Flag may have changed |
-| Too complex | Park or flag for expert |
+| Conflicting info | Note both, reduce confidence, tag ASSUMED |
+| Old info | Flag may have changed, tag ASSUMED |
+| Too complex | Park or flag for expert, tag ASSUMED |

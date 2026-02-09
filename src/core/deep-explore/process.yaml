@@ -1,0 +1,233 @@
+# Deep Explore V3.0 — Process Definition for Deep-Process Framework
+# Version: 3.0.0
+# Architecture: Single-agent sequential pipeline (7 steps + enforcement layers)
+
+id: "proc-deep-explore-v2"
+name: "Deep Explore V3.0 (Enforcement-First Decision Exploration)"
+version: "3.0.0"
+description: |
+  Structured decision exploration with enforcement architecture.
+  Transforms complex choices into understanding through knowledge expansion,
+  uncertainty mapping, and systematic option analysis.
+
+  V3.0 additions over V2.2:
+  - Binding gates at every phase exit (no "intelligent" skipping)
+  - ASSUMPTIONS_DECLARED before every extraction phase
+  - EVR sequence enforcement (Extract → Verify → Render)
+  - Mandatory post-phase checklists
+  - Counter-checks on key claims
+  - SCOPE_REDUCTION protocol (formal skip declaration)
+  - COMPLETENESS > TOKEN_ECONOMY priority
+  - Execution-focused instructions (HOW/WHEN, not WHAT)
+
+  7-step pipeline: AUDIT → RESEARCH → MAP → DEEPEN → CHALLENGE →
+  SYNTHESIZE → OUTPUT, with enforcement layers and optional fear analysis.
+
+  54 methods across 5 tiers (Foundation, Map, Illuminate, Challenge, Synthesize,
+  Converge, Meta). 3 depth levels (quick/standard/deep).
+  Automatic fear detection with structured resolution.
+
+inherits:
+  framework: "deep-process"
+  version: "3.7"
+  base_process: "proc-deep-explore"
+  base_version: "2.2.0"
+
+# Architecture
+architecture:
+  type: "single-agent"
+  orchestrator: "workflow.md"
+  reference: "reference.md"
+
+# Priority declaration (binding)
+priorities:
+  - rank: 1
+    name: "COMPLETENESS"
+    description: "Every element covered, no silent omissions"
+  - rank: 2
+    name: "DEPTH"
+    description: "Thorough analysis of each element"
+  - rank: 3
+    name: "ACCURACY"
+    description: "Verified over assumed"
+  - rank: 4
+    name: "TOKEN_ECONOMY"
+    description: "Conciseness — lowest priority"
+
+# Enforcement layers
+enforcement:
+  assumptions_declared:
+    when: "Before any extraction/analysis in each phase"
+    violation: "PROTOCOL_VIOLATION → HALT"
+  evr_sequence:
+    phases: ["EXTRACT", "VERIFY", "RENDER"]
+    violation: "SEQUENCE_VIOLATION → HALT"
+  counter_checks:
+    minimum_per_phase:
+      quick: 1
+      standard: 2
+      deep: 3
+    violation: "PROTOCOL_VIOLATION → gate LOCKED"
+  post_phase_checklist:
+    when: "After every phase"
+    violation: "Gate LOCKED"
+  binding_gates:
+    count: 7
+    ids: ["GATE_00", "GATE_01", "GATE_02", "GATE_03", "GATE_04", "GATE_05", "GATE_06"]
+    violation: "Cannot proceed"
+    escape: "SCOPE_REDUCTION_DECLARATION"
+  scope_reduction:
+    requires_user_approval: "For CRITICAL items"
+    must_document: ["item_skipped", "reason", "impact_assessment", "completeness_cost"]
+
+# Configuration
+config_files:
+  scoring: "data/coverage-scoring.yaml"
+  report_template: "data/exploration-report-template.md"
+  research_methods: "data/research-methods.md"
+  method_index: "methods.csv"
+
+# Methods (54 methods across tiers)
+methods:
+  foundation_core: ["E001", "E002", "E003", "E004", "E005", "E006", "E007"]
+  foundation_fear: ["E008", "E009", "E010", "E011", "E012", "E013", "E014"]
+  map: ["M001", "M002", "M003"]
+  illuminate: ["M011", "M012", "M013", "M014", "M015", "M016", "M017", "M018"]
+  challenge: ["M021", "M022", "M023", "M024", "M025", "M026"]
+  synthesize: ["M031", "M032", "M033", "M034", "M035", "M036"]
+  converge: ["M041", "M042", "M043", "M044"]
+  meta: ["M051", "M052", "M053", "M054"]
+
+# Depth levels
+depth_levels:
+  - id: "quick"
+    time: "10-20 min"
+    max_iterations: 1
+    dimensions_min: 3
+    options_analyzed: "top 2"
+    coverage_target: 15
+    counter_checks_per_phase: 1
+  - id: "standard"
+    time: "45-90 min"
+    max_iterations: 3
+    dimensions_min: 4
+    options_analyzed: "top 3-5"
+    coverage_target: 35
+    counter_checks_per_phase: 2
+  - id: "deep"
+    time: "2-4 hours"
+    max_iterations: "unlimited"
+    dimensions_min: 5
+    options_analyzed: "all viable"
+    coverage_target: 50
+    counter_checks_per_phase: 3
+
+# Process steps
+steps:
+  - id: "step-00"
+    name: "Knowledge Audit"
+    file: "steps/step-00-knowledge-audit.md"
+    time_estimate: "5-15 min"
+    inputs: ["decision_question", "context"]
+    outputs: ["knowledge_map", "research_queue", "fear_map"]
+    gate: "GATE_00"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "CHECKLIST"]
+
+  - id: "step-01"
+    name: "Research"
+    file: "steps/step-01-research.md"
+    time_estimate: "15-120 min"
+    inputs: ["research_queue", "knowledge_map"]
+    outputs: ["research_summary", "updated_knowledge_map"]
+    gate: "GATE_01"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "COUNTER_CHECK", "CHECKLIST"]
+
+  - id: "step-02"
+    name: "Map"
+    file: "steps/step-02-map.md"
+    time_estimate: "15-30 min"
+    inputs: ["knowledge_map", "research_summary"]
+    outputs: ["option_map", "morphological_box"]
+    gate: "GATE_02"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "COUNTER_CHECK", "CHECKLIST"]
+
+  - id: "step-03"
+    name: "Deepen"
+    file: "steps/step-03-deepen.md"
+    time_estimate: "20-40 min"
+    inputs: ["option_map"]
+    outputs: ["consequence_map", "reversibility_assessment", "dependency_graph"]
+    gate: "GATE_03"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "COUNTER_CHECK", "CHECKLIST"]
+
+  - id: "step-04"
+    name: "Challenge"
+    file: "steps/step-04-challenge.md"
+    time_estimate: "15-20 min"
+    inputs: ["option_map", "consequence_map"]
+    outputs: ["challenge_results", "fear_resolution"]
+    gate: "GATE_04"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "COUNTER_CHECK", "CHECKLIST"]
+
+  - id: "step-05"
+    name: "Synthesize"
+    file: "steps/step-05-synthesize.md"
+    time_estimate: "10-15 min"
+    inputs: ["challenged_option_map", "consequence_map"]
+    outputs: ["minimal_assertions", "strategic_clusters", "decision_sequence"]
+    gate: "GATE_05"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "COUNTER_CHECK", "CHECKLIST"]
+
+  - id: "step-06"
+    name: "Output"
+    file: "steps/step-06-output.md"
+    time_estimate: "5-10 min"
+    inputs: ["all_step_outputs"]
+    outputs: ["exploration_report", "coverage_score", "process_log"]
+    gate: "GATE_06"
+    enforcement: ["ASSUMPTIONS_DECLARED", "EVR", "CHECKLIST"]
+
+# Artifacts produced
+artifacts:
+  process_artifacts:
+    - { id: "knowledge-map", name: "Knowledge Map", step: "step-00" }
+    - { id: "research-summary", name: "Research Summary", step: "step-01" }
+    - { id: "option-map", name: "Option Map (Morphological Box)", step: "step-02" }
+    - { id: "consequence-map", name: "Consequence Map", step: "step-03" }
+    - { id: "challenge-results", name: "Challenge Results", step: "step-04" }
+    - { id: "synthesis", name: "Synthesis Summary", step: "step-05" }
+    - { id: "process-log", name: "Process Execution Log", step: "all" }
+  output_artifacts:
+    - { id: "exploration-report", name: "Exploration Report", template: "data/exploration-report-template.md", step: "step-06" }
+
+# Decision points
+decision_points:
+  - id: "dp-depth-selection"
+    step: "step-00"
+    question: "Select exploration depth"
+    options: ["Quick", "Standard", "Deep"]
+  - id: "dp-fear-detection"
+    step: "step-00"
+    question: "Fear analysis (auto-detected)"
+    options: ["on", "off"]
+
+# Features
+features:
+  fear_analysis:
+    description: "Auto-detected from user language. Adds structured fear resolution to exploration."
+    trigger: "automatic"
+    methods_added: ["E008", "E009", "E010", "E011", "E012", "E013", "E014"]
+    report_section: "Section 8: Fear Resolution"
+  enforcement_architecture:
+    description: "5-layer enforcement stack applied to every phase: ASSUMPTIONS_DECLARED, EVR sequence, counter-checks, post-phase checklists, binding gates"
+    layers: 5
+    scope_reduction: "Formal protocol for any deliberate omission"
+
+# Integration with other Deep Processes
+integrates_with:
+  produces_for:
+    - { process: "deep-verify", outputs: ["option_map", "assumptions", "consequence_map"] }
+    - { process: "deep-risk", outputs: ["option_map", "consequence_map", "knowledge_gaps"] }
+    - { process: "deep-synthesis", outputs: ["option_map", "assumptions", "consequence_map", "knowledge_gaps"] }
+  based_on:
+    - { process: "deep-explore", version: "2.2.0", relationship: "enhanced successor" }

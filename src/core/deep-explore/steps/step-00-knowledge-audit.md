@@ -10,53 +10,155 @@ Map what you know and don't know BEFORE exploring options.
 
 **Outputs:** Knowledge Map, Research Queue
 
+**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, POST-PHASE CHECKLIST, GATE_00
+
 ---
 
-## Procedure
+## 00.0 Invocation — Depth Selection
 
-### 00.1 Frame the Decision
+**Display this dialog FIRST, before doing anything else. HALT until user responds.**
 
 ```
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                      DEEP EXPLORE V3.0                                     ║
+║                      Decision Space Exploration                            ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  Before we begin, choose the exploration depth:                           ║
+║                                                                            ║
+║  [1] QUICK  (10-20 min)                                                   ║
+║      Basic option map, top 2 options, quick readiness check               ║
+║      → Urgent, low-stakes, or initial orientation                         ║
+║                                                                            ║
+║  [2] STANDARD  (45-90 min)                                                ║
+║      Full option map (4-6 dims), VERIFIED vs ASSUMED consequences         ║
+║      Premortem, bias check, strategic clusters, full report               ║
+║      → Important decision, need confidence                                ║
+║                                                                            ║
+║  [3] DEEP  (2-4 hours)                                                    ║
+║      Exhaustive map, all options, multiple iterations                      ║
+║      Devil's advocate, black swan hunting, dependency analysis            ║
+║      → Critical/irreversible, very high stakes                            ║
+║                                                                            ║
+║  Choose: [1] / [2] / [3]                                                  ║
+║                                                                            ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+```
+
+**After user selection — execute in this exact order:**
+1. Save: `depth = quick | standard | deep`
+2. Scan user's decision description for fear signals (see workflow.md FEAR DETECTION)
+3. Set: `fear_analysis = on | off`
+4. Initialize PROCESS_LOG with depth and fear_analysis settings
+5. Continue to 00.1
+
+**ENFORCEMENT:** If depth is not set, ALL subsequent steps are LOCKED. No proceeding.
+
+---
+
+## 00.1 ASSUMPTIONS_DECLARED (MANDATORY)
+
+**Execute BEFORE any extraction. List all interpretive decisions as hypotheses.**
+
+```
+ASSUMPTIONS_DECLARED for Phase 0:
+┌──────┬──────────────────────────────────────┬──────────────┬────────────┬──────────────────────────────┐
+│ ID   │ Assumption                           │ Type         │ Confidence │ Falsification Criterion      │
+├──────┼──────────────────────────────────────┼──────────────┼────────────┼──────────────────────────────┤
+│ H-001│ "[what we interpret the decision to  │ INTERPRETIVE │ HIGH/MED/  │ "[user clarifies otherwise]" │
+│      │  be about]"                          │              │ LOW        │                              │
+│ H-002│ "[assumed scope of exploration]"     │ CONTEXTUAL   │            │ "[if scope is different]"    │
+│ H-003│ "[domain assumption]"               │ DOMAIN       │            │ "[what disproves]"           │
+└──────┴──────────────────────────────────────┴──────────────┴────────────┴──────────────────────────────┘
+
+ENFORCEMENT: If this table is empty, emit:
+  RED_FLAG: "Zero assumptions declared — re-examine. Every decision framing
+  involves interpretive choices. Declare them."
+```
+
+---
+
+## 00.2 EXTRACT: Frame the Decision
+
+**Gather raw decision elements. No interpretation yet.**
+
+```
+RAW EXTRACTION:
+
+USER'S WORDS (verbatim quote):
+"[exact user input about the decision]"
+
+DECISION ELEMENTS EXTRACTED:
+1. [element 1 from user input]
+2. [element 2 from user input]
+3. [element 3 from user input]
+
+CONTEXT ELEMENTS:
+• [context 1]
+• [context 2]
+
+FEAR SIGNALS DETECTED: [list any fear/concern language found]
+
+[EXTRACT_COMPLETE]
+```
+
+## 00.3 VERIFY: Validate Decision Frame
+
+**Verify extracted elements are accurate and complete.**
+
+```
+VERIFICATION:
+
 DECISION STATEMENT:
 "We need to decide: _______________________________________"
+VERIFICATION: Does this capture ALL elements from user input? [Y/N]
+  IF N → list missing elements, re-extract
 
 STAKES: [ ] HIGH  [ ] MEDIUM  [ ] LOW
+VERIFICATION: Based on what evidence? [source]
 
 WHY IT MATTERS:
 • Good outcome: ________________________________________
 • Bad outcome: _________________________________________
 • Not deciding: ________________________________________
+VERIFICATION: Are outcomes based on evidence or assumption?
+  Evidence: [list] | Assumption: [tag with H-ID from ASSUMPTIONS_DECLARED]
+
+[VERIFY_COMPLETE]
 ```
 
-### 00.2 Inventory Known Knowledge
+## 00.4 RENDER: Knowledge Inventory
+
+**Now produce formatted output (only after verification).**
 
 ```
 KNOWN FACTS (certain, with evidence):
-┌─────────────────────────────────────────────────────────────────┐
-│ Fact                              │ Source/Evidence             │
+┌───────────────────────────────────┬─────────────────────────────┐
+│ Fact                              │ Source/Evidence              │
 ├───────────────────────────────────┼─────────────────────────────┤
-│                                   │                             │
 │                                   │                             │
 └───────────────────────────────────┴─────────────────────────────┘
 
 ASSUMPTIONS (believed, not verified):
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────┬─────────────┬───────────────┐
 │ Assumption                        │ Confidence  │ Verify?       │
 ├───────────────────────────────────┼─────────────┼───────────────┤
-│                                   │ HIGH/MED/LOW│ Y/N           │
 │                                   │ HIGH/MED/LOW│ Y/N           │
 └───────────────────────────────────┴─────────────┴───────────────┘
 
 KNOWN UNKNOWNS (questions you have):
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────┬─────────────┬───────────────┐
 │ Question                          │ Importance  │ Can research? │
 ├───────────────────────────────────┼─────────────┼───────────────┤
 │                                   │ HIGH/MED/LOW│ Y/N           │
-│                                   │ HIGH/MED/LOW│ Y/N           │
 └───────────────────────────────────┴─────────────┴───────────────┘
+
+[RENDER_COMPLETE]
 ```
 
-### 00.3 Surface Unknown Unknowns
+---
+
+## 00.5 Surface Unknown Unknowns
 
 **Knowledge categories:**
 - **Known Facts** = Things you know and can verify
@@ -64,10 +166,9 @@ KNOWN UNKNOWNS (questions you have):
 - **Known Unknowns** = Questions you know you have
 - **Unknown Unknowns** = Blind spots you don't know exist yet
 
-This step targets **Unknown Unknowns** — the most dangerous category because
-you can't research what you don't know to ask about.
+This step targets **Unknown Unknowns** — the most dangerous category.
 
-📂 Load method: `data/method-procedures/E001_Abductive_Reasoning.md`
+Load method: `data/method-procedures/E001_Abductive_Reasoning.md`
 
 Use abductive reasoning to discover blind spots:
 
@@ -91,9 +192,23 @@ PROMPT 5: ECOSYSTEM STATE
 What has changed recently?"
 ```
 
-For each prompt, list discoveries and add to Known Unknowns.
+For each prompt: list discoveries and add to Known Unknowns.
 
-### 00.4 Prioritize Research Needs
+**★ KEY_CLAIM: "All significant unknown unknowns have been surfaced."**
+
+**COUNTER-CHECK on ★:**
+```
+COUNTER-CHECK #1:
+  claim: "All significant unknown unknowns have been surfaced"
+  disproof: "There exists a critical blind spot not covered by prompts 1-5"
+  search_attempt: "[try additional angle: regulatory, cultural, timing, etc.]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [if WEAKENED/REFUTED: add missing area, re-run prompts]
+```
+
+---
+
+## 00.6 Prioritize Research Needs
 
 ```
                       IMPACT ON DECISION
@@ -112,20 +227,19 @@ RESEARCH QUEUE:
 
 ---
 
-## 00.5 Fear Analysis (when fear_analysis=on)
+## 00.7 Fear Analysis (when fear_analysis=on)
 
-**Triggered when:** User expresses uncertainty, fear, or sees blockers. Automatically enabled with `--fear` flag.
+**Triggered when:** User expresses uncertainty, fear, or sees blockers.
 
-📂 Load method: `data/method-procedures/E008_Failure_Reason_Exploration.md`
+Load method: `data/method-procedures/E008_Failure_Reason_Exploration.md`
 
 **Note:** E008 uses the UNIFIED FAILURE TAXONOMY (shared with M021 Premortem in Step 4).
-Use E008 here for vague fears; M021 later for specific option stress-testing.
 
 ```
 FEAR INVENTORY:
 "What am I afraid will go wrong?"
 
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────┬─────────────┬───────────────────┐
 │ Fear                          │ Type        │ Status            │
 ├───────────────────────────────┼─────────────┼───────────────────┤
 │                               │ STRUCTURAL  │ BLOCKER/OK        │
@@ -141,75 +255,103 @@ UNIFIED TYPE KEY (used by E008 and M021):
 • COGNITIVE = Assumptions (untested beliefs, biases) → verify or dismiss
 ```
 
-📂 Load method: `data/method-procedures/E011_Control_Influence_Analysis.md`
+Load method: `data/method-procedures/E011_Control_Influence_Analysis.md`
 
 ```
 CONTROL ANALYSIS:
-For each concern, classify:
-
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────┬─────────────┬───────────────────┐
 │ Concern                       │ Zone        │ Response          │
 ├───────────────────────────────┼─────────────┼───────────────────┤
 │                               │ CTRL/INF/NO │ [action]          │
-│                               │ CTRL/INF/NO │ [action]          │
 └───────────────────────────────┴─────────────┴───────────────────┘
-
-ZONE KEY:
-• CTRL = Control (you can directly change)
-• INF = Influence (you can affect but not control)
-• NO = No Control (accept or ignore)
 ```
 
-📂 Load method: `data/method-procedures/E012_Fundamental_Block_Analysis.md`
+Load method: `data/method-procedures/E012_Fundamental_Block_Analysis.md`
 
 ```
 BLOCKER ANALYSIS:
-"What do I think makes this impossible?"
-
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────┬─────────────┬───────────────────┐
 │ Suspected Wall                │ Status      │ Workaround        │
 ├───────────────────────────────┼─────────────┼───────────────────┤
-│                               │ TRUE/FALSE  │                   │
-│                               │ /MOVEABLE   │                   │
+│                               │ TRUE/FALSE/ │                   │
+│                               │ MOVEABLE    │                   │
 └───────────────────────────────┴─────────────┴───────────────────┘
 ```
 
-📂 Load method: `data/method-procedures/E009_Reverse_Abduction.md` (if user sees "impossible")
+Load method: `data/method-procedures/E009_Reverse_Abduction.md` (if user sees "impossible")
 
 ```
 IF USER THINKS SOMETHING IS IMPOSSIBLE:
-
 "If this worked, what would need to be true?"
 
 REQUIRED CONDITIONS FOR SUCCESS:
 1. ___
 2. ___
-3. ___
-
 Which conditions are actually achievable? [list]
 ```
 
-📂 Load method: `data/method-procedures/E013_Contrast_Exploration.md`
+Load method: `data/method-procedures/E013_Contrast_Exploration.md`
 
 ```
 CONTRAST ANALYSIS:
-"Who has done something similar? What can I learn from them?"
-
-┌─────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────┬─────────────┬───────────────────┐
 │ Comparable                    │ Outcome     │ Key Lesson        │
 ├───────────────────────────────┼─────────────┼───────────────────┤
 │                               │ SUCCESS/FAIL│                   │
-│                               │ SUCCESS/FAIL│                   │
 └───────────────────────────────┴─────────────┴───────────────────┘
-
-MY POSITION:
-• Similar to [who] because: ___
-• Different because: ___
-• Key advantage I have: ___
-• Key risk I share: ___
 ```
 
 **Add fear-related items to Research Queue.**
+
+---
+
+## POST-PHASE CHECKLIST (MANDATORY)
+
+```
+PHASE_00 COMPLETION CHECKLIST:
+
+□ Depth selected and saved?                [Y/N]
+□ Fear detection scan completed?           [Y/N]
+□ ASSUMPTIONS_DECLARED logged?             [count: ___]
+□ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
+□ Decision framed in one sentence?         [Y/N]
+□ Stakes assessed?                         [Y/N]
+□ Knowledge inventory complete?            [Y/N]
+  - Known Facts: [count]
+  - Assumptions: [count]
+  - Known Unknowns: [count]
+  - Discovered Unknowns: [count]
+□ Counter-check performed on ★ claims?     [count: ___]
+□ Research queue generated?                [Y/N, count: ___]
+□ Fear analysis completed (if on)?         [Y/N or N/A]
+
+CHECKLIST_STATUS: PASS | FAIL
+IF FAIL: Fix before proceeding.
+```
+
+---
+
+## GATE_00: KNOWLEDGE AUDIT EXIT
+
+```
+GATE_00 BINDING CHECK:
+
+□ Decision framed (one sentence)           — [PASS/FAIL] — CRITICAL
+□ Stakes assessed (HIGH/MEDIUM/LOW)        — [PASS/FAIL] — REQUIRED
+□ Knowledge inventory complete             — [PASS/FAIL] — CRITICAL
+□ Research queue generated                 — [PASS/FAIL] — REQUIRED
+□ ASSUMPTIONS_DECLARED logged (min 1)      — [PASS/FAIL] — CRITICAL
+□ Post-phase checklist PASSED              — [PASS/FAIL] — CRITICAL
+
+GATE_00 STATUS: OPEN | LOCKED
+
+IF LOCKED and item is CRITICAL:
+  → Fix the failing condition
+  → OR emit SCOPE_REDUCTION_DECLARATION (requires user approval)
+
+IF LOCKED and item is REQUIRED:
+  → Fix OR emit SCOPE_REDUCTION_DECLARATION (logged, no user approval needed)
+```
 
 ---
 
@@ -229,8 +371,7 @@ MY POSITION:
 ║  Discovered Unknowns:   [count]                                ║
 ║                                                                ║
 ║  Research Queue:        [count] items                          ║
-║                                                                ║
-║  PROCEED TO STEP 1? [YES/NO]                                  ║
+║  Assumptions Declared:  [count] hypotheses                     ║
 ║                                                                ║
 ╚═══════════════════════════════════════════════════════════════╝
 ```
@@ -248,14 +389,14 @@ MY POSITION:
 ║    • Cognitive: [count]                                        ║
 ║                                                                ║
 ║  CONTROL ANALYSIS:                                             ║
-║    • Controllable: [count] → add to action list               ║
-║    • Influenceable: [count] → do best effort                  ║
-║    • No control: [count] → accept or ignore                   ║
+║    • Controllable: [count]                                     ║
+║    • Influenceable: [count]                                    ║
+║    • No control: [count]                                       ║
 ║                                                                ║
 ║  BLOCKERS ANALYZED: [count]                                   ║
-║    • True walls: [count] → pivot or stop                      ║
-║    • False walls: [count] → proceed                           ║
-║    • Moveable walls: [count] → research how to move           ║
+║    • True walls: [count]                                       ║
+║    • False walls: [count]                                      ║
+║    • Moveable walls: [count]                                   ║
 ║                                                                ║
 ║  FEAR-RELATED RESEARCH: [count] items added to queue          ║
 ║                                                                ║
@@ -266,49 +407,33 @@ MY POSITION:
 
 ## Transition
 
-- **If research queue has items** → Proceed to Step 1
-- **If research queue is empty** → Skip to Step 2 (rare)
-- **If frame is unclear** → Stay in Step 0, refine
-- **If decision should not be made** → ABORT exploration (see below)
+- **If GATE_00 = OPEN and research queue has items** → Proceed to Step 1
+- **If GATE_00 = OPEN and research queue is empty** → Skip to Step 2 (requires SCOPE_REDUCTION_DECLARATION)
+- **If frame unclear after 3 attempts** → Escalate or ABORT
+- **If GATE_00 = LOCKED** → Fix failing conditions or declare SCOPE_REDUCTION
 
 ---
 
 ## ABORT: When NOT to Decide
 
-Sometimes exploration reveals the decision should not be made at all. Valid reasons to ABORT:
-
 ```
-□ PREMATURE: Critical information unavailable and cannot be obtained
+□ PREMATURE: Critical information unavailable
   → Output: "Wait until [condition] before deciding"
 
 □ WRONG QUESTION: The framed decision is not the real problem
   → Output: "Reframe to [better question] instead"
 
-□ EXTERNAL DEPENDENCY: Decision depends on someone else's action first
+□ EXTERNAL DEPENDENCY: Decision depends on someone else first
   → Output: "Blocked by [dependency], escalate to [who]"
 
 □ NO VIABLE OPTIONS: All options have unacceptable consequences
   → Output: "No good options exist, consider [alternatives]"
 ```
 
-**ABORT OUTPUT:**
-```
-╔═══════════════════════════════════════════════════════════════╗
-║  EXPLORATION ABORTED                                           ║
-╠═══════════════════════════════════════════════════════════════╣
-║  REASON: [PREMATURE / WRONG QUESTION / EXTERNAL / NO OPTIONS] ║
-║  RECOMMENDATION: [what to do instead]                          ║
-║  REVISIT WHEN: [condition for re-exploration]                  ║
-╚═══════════════════════════════════════════════════════════════╝
-```
-
----
-
 ## Escalation: When Stuck in Step 0
 
 If frame remains unclear after 3 attempts:
-
 1. **Simplify**: Break into smaller sub-decisions
-2. **Consult**: Ask user for clarification or external input
+2. **Consult**: Ask user for clarification
 3. **Pivot**: Try different framing angle
 4. **Abort**: If still unclear, decision may be premature

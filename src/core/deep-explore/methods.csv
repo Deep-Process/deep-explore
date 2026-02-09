@@ -1,46 +1,46 @@
-num,tier,phase,method_name,description,output_pattern
-E001,0,FOUNDATION,Abductive Reasoning,Generate hypotheses from observations - discover unknown unknowns,observations → hypotheses → blind spots surfaced
-E002,0,FOUNDATION,Counterfactual Thinking,Identify causal factors by asking what would NOT happen without X,counterfactual → necessary elements → leverage points
-E003,0,FOUNDATION,Minimal Assertions,Compress knowledge to smallest set of actionable principles,insights → compression → core truths
-E004,0,FOUNDATION,Boundary Analysis,Find limits where options stop working - edge cases and constraints,option → boundary conditions → failure points
-E005,0,FOUNDATION,Causal Models,Map influence relationships between variables,variables → causal links → leverage points
-E006,0,FOUNDATION,Falsification,Test beliefs by actively trying to disprove them,belief → falsification attempt → survives/fails
-E007,0,FOUNDATION,Information Questions,Identify questions with highest value for reducing uncertainty,unknowns → information value → priority questions
-E008,0,FEAR,Failure Reason Exploration,Transform vague fears into structured risk taxonomy,fears → STRUCTURAL/OPERATIONAL/EXTERNAL/COGNITIVE → actionable
-E009,0,FEAR,Reverse Abduction,Discover paths by assuming success and working backward,success assumption → required conditions → achievable paths
-E010,0,FEAR,Cognitive MVP,Find smallest action that teaches something useful,fear → minimal test → learning regardless of outcome
-E011,0,FEAR,Control vs Influence Analysis,Separate controllable from influenceable from uncontrollable,concerns → CTRL/INF/NO zones → appropriate response
-E012,0,FEAR,Fundamental Block Analysis,Distinguish true walls from false walls,suspected blocker → TRUE/FALSE/MOVEABLE → action
-E013,0,FEAR,Contrast Exploration,Learn from others' successes and failures in similar situations,comparables → outcomes → lessons for user
-E014,0,FEAR,Growth Test,Filter decisions by whether they develop the user,option → growth forced? → HIGH GROWTH vs GAMBLING
-1,1,MAP,Dimension Discovery,Identify all axes of choice in the decision space - decompose apparent question into independent dimensions,dimensions → independence check → coverage
-2,1,MAP,Option Enumeration,Systematically list ALL options for each dimension using SCAMPER and extreme options,options → sources → hybrid combinations
-3,1,MAP,Constraint Mapping,Identify truly HARD constraints vs soft preferences - eliminate impossible combinations only,constraints → HARD test → valid space calculation
-11,2,ILLUMINATE,Consequence Analysis,Map first/second/third order effects - GAINS/COSTS/OPENS/CLOSES for each option,consequence tree → categorization → timeline
-12,2,ILLUMINATE,Reversibility Check,Assess which decisions can be undone and at what cost - identify points of no return,reversibility rating → recovery cost → decision urgency
-13,2,ILLUMINATE,Dependency Analysis,Map which decisions depend on others - what must be decided first,dependency graph → critical path → parallel decisions
-14,2,ILLUMINATE,Stakeholder Impact,Analyze how each option affects different stakeholders - surface hidden opposition,stakeholder map → impact matrix → alliance/resistance
-15,2,ILLUMINATE,Future Optionality,Assess which options preserve vs foreclose future possibilities - real options value,optionality rating → option value → flexibility premium
-16,2,ILLUMINATE,Integration Points,Identify where options connect to existing systems/processes - hidden complexity,touchpoints → complexity rating → migration cost
-17,2,ILLUMINATE,Resource Trade-off,Map resource requirements for each option - reveal hidden costs,resource matrix → scarcity analysis → trade-off curves
-18,2,ILLUMINATE,Opportunity Cost,Calculate what you give up by choosing each option - make trade-offs explicit,alternatives foregone → value foregone → net value
-21,3,CHALLENGE,Premortem,Imagine failure and trace causes - surface risks that optimism hides,failure story → causes → preventable/detectable/recoverable
-22,3,CHALLENGE,Black Swan Hunt,Search for low-probability high-impact events that could change everything,rare events → impact assessment → monitoring plan
-23,3,CHALLENGE,Assumption Stress Test,Take each key assumption and imagine it's wrong - what breaks?,assumption list → failure modes → robustness rating
-24,3,CHALLENGE,Regret Minimization,Project forward and ask what you'd regret NOT considering,future self perspective → unexplored territory → coverage gaps
-25,3,CHALLENGE,Devil's Advocate,Argue passionately against the currently favored option - find weaknesses,attack construction → weakness discovery → defense gaps
-26,3,CHALLENGE,Red Team Options,Imagine a competitor chose each option - how would they exploit it against you?,competitive dynamics → vulnerabilities → defensive measures
-31,4,SYNTHESIZE,Option Clustering,Group similar strategies into families - reveal underlying strategic choices,clusters → family characteristics → meta-options
-32,4,SYNTHESIZE,Decision Sequencing,Determine what must be decided first vs what can wait,sequence map → dependencies → parallel tracks
-33,4,SYNTHESIZE,Real Options Identification,Find decisions that can be delayed while preserving optionality,delay candidates → option preservation → decision timing
-34,4,SYNTHESIZE,Information Value Analysis,Calculate what information would most reduce uncertainty - design experiments,uncertainty map → information value → experiment design
-35,4,SYNTHESIZE,Decision Criteria Extraction,Surface the implicit criteria being used to evaluate options,criteria list → weights → explicit trade-offs
-36,4,SYNTHESIZE,Path Dependency Mapping,Show how early choices constrain later ones - reveal strategic forks,decision tree → lock-in points → strategic forks
-41,5,CONVERGE,Trade-off Presentation,Present options as explicit trade-offs without recommendation,trade-off matrix → user choice → documentation
-42,5,CONVERGE,Uncertainty Documentation,Document what remains unknown and how it affects the decision,known unknowns → impact assessment → monitoring plan
-43,5,CONVERGE,Experiment Design,For COMPLEX problems design small experiments to learn before committing,hypothesis → minimal experiment → learning criteria
-44,5,CONVERGE,Decision Record,Document the decision context rationale and review triggers,decision → rationale → review triggers
-51,META,ANY,Archetype Check,Scan for known decision traps (false dichotomy sunk cost etc),archetype scan → trap detection → mitigation
-52,META,ANY,Coverage Assessment,Evaluate whether exploration is sufficient for decision,coverage score → gaps → recommendation
-53,META,ANY,Abstraction Level Check,Verify exploration staying at intended level - prevent scope creep,level check → drift detection → refocus
-54,META,ANY,Cynefin Reassessment,Re-evaluate problem type as understanding deepens,problem type → approach adjustment → method selection
+id,name,category,phase,description,procedure_file
+E001,Abductive Reasoning,foundation,any,Generate hypotheses from observations,data/method-procedures/E001_Abductive_Reasoning.md
+E002,Counterfactual Thinking,foundation,any,Identify causal factors and leverage points,data/method-procedures/E002_Counterfactual_Thinking.md
+E003,Minimal Assertions,foundation,any,Compress knowledge to actionable principles,data/method-procedures/E003_Minimal_Assertions.md
+E004,Boundary Analysis,foundation,any,Find limits where things stop working,data/method-procedures/E004_Boundary_Analysis.md
+E005,Causal Models,foundation,any,Map influence relationships,data/method-procedures/E005_Causal_Models.md
+E006,Falsification,foundation,any,Test beliefs by trying to disprove them,data/method-procedures/E006_Falsification.md
+E007,Information Questions,foundation,any,Identify highest-value questions,data/method-procedures/E007_Information_Questions.md
+E008,Failure Reason Exploration,fear,step-00,Transform fear into structured risk map,data/method-procedures/E008_Failure_Reason_Exploration.md
+E009,Reverse Abduction,fear,step-00,Discover paths by assuming success,data/method-procedures/E009_Reverse_Abduction.md
+E010,Cognitive MVP,fear,step-04,Find smallest action that teaches something,data/method-procedures/E010_Cognitive_MVP.md
+E011,Control vs Influence Analysis,fear,step-00,Separate controllable from uncontrollable,data/method-procedures/E011_Control_Influence_Analysis.md
+E012,Fundamental Block Analysis,fear,step-00,Find true walls vs false walls,data/method-procedures/E012_Fundamental_Block_Analysis.md
+E013,Contrast Exploration,fear,step-00,Learn from others successes and failures,data/method-procedures/E013_Contrast_Exploration.md
+E014,Growth Test,fear,step-04,Filter decisions by growth potential,data/method-procedures/E014_Growth_Test.md
+M001,Dimension Discovery,map,step-02,Identify axes of choice,data/method-procedures/M001_Dimension_Discovery.md
+M002,Option Enumeration,map,step-02,List ALL options per dimension,data/method-procedures/M002_Option_Enumeration.md
+M003,Constraint Mapping,map,step-02,Hard/soft constraints,data/method-procedures/M003_Constraint_Mapping.md
+M011,Consequence Analysis,illuminate,step-03,Map GAINS/COSTS/OPENS/CLOSES,data/method-procedures/M011_Consequence_Analysis.md
+M012,Reversibility Check,illuminate,step-03,Can this be undone?,data/method-procedures/M012_Reversibility_Check.md
+M013,Dependency Analysis,illuminate,step-03,What must be decided first?,data/method-procedures/M013_Dependency_Analysis.md
+M014,Stakeholder Impact,illuminate,step-03,Who is affected?,
+M015,Future Optionality,illuminate,step-03,Preserve vs foreclose possibilities,
+M016,Integration Points,illuminate,step-03,Hidden complexity at touchpoints,
+M017,Resource Trade-off,illuminate,step-03,Hidden costs and resource needs,
+M018,Opportunity Cost,illuminate,step-03,What you give up,
+M021,Premortem,challenge,step-04,Imagine failure trace causes,data/method-procedures/M021_Premortem.md
+M022,Black Swan Hunt,challenge,step-04,Low-probability high-impact events,data/method-procedures/M022_Black_Swan_Hunt.md
+M023,Assumption Stress Test,challenge,step-04,Break assumptions one by one,data/method-procedures/M023_Assumption_Stress_Test.md
+M024,Regret Minimization,challenge,step-04,What would future you regret?,
+M025,Devil's Advocate,challenge,step-04,Argue against favored option,
+M026,Red Team Options,challenge,step-04,How would competitor exploit this?,
+M031,Option Clustering,synthesize,step-05,Group similar strategies,
+M032,Decision Sequencing,synthesize,step-05,What first what can wait,
+M033,Real Options Identification,synthesize,step-05,Delay while preserving optionality,
+M034,Information Value Analysis,synthesize,step-05,Most uncertainty-reducing information,
+M035,Decision Criteria Extraction,synthesize,step-05,Surface implicit criteria,
+M036,Path Dependency Mapping,synthesize,step-05,Early choices constrain later ones,
+M041,Trade-off Presentation,converge,step-06,Present without recommendation,
+M042,Uncertainty Documentation,converge,step-06,What remains unknown,
+M043,Experiment Design,converge,step-06,Small experiments before committing,
+M044,Decision Record,converge,step-06,Context rationale review triggers,
+M051,Archetype Check,meta,any,Known decision traps,
+M052,Coverage Assessment,meta,any,Is exploration sufficient?,
+M053,Abstraction Level Check,meta,any,Prevent scope creep,
+M054,Cynefin Reassessment,meta,any,Re-evaluate problem type,
