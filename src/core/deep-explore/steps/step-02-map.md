@@ -1,16 +1,8 @@
 # Step 02: Map (Divergent)
 
-## Purpose
-
-Now that we understand the space, map the options systematically.
-
-**Time:** 15-30 min
-
-**Inputs:** Knowledge Map, Research Summary
-
-**Outputs:** Option Map (Morphological Box)
-
-**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_02
+**INPUTS:** knowledge_map.yaml, research_queue.yaml (with findings)
+**OUTPUTS:** option_map.yaml
+**ENFORCEMENT:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_02
 
 ---
 
@@ -33,9 +25,12 @@ ASSUMPTIONS_DECLARED for Phase 2:
 
 ## 02.1 EXTRACT: Dimension Discovery
 
-Load method: `data/method-procedures/M001_Dimension_Discovery.md`
-
-A DIMENSION is an axis of choice — a category where you must pick one option.
+**M001 Dimension Discovery (embedded):**
+1. Identify choice axes from research findings and knowledge map
+2. Apply discovery questions: "What choices emerged?", "What are fundamental axes?", "What would expert add?"
+3. Classify each dimension: INDEPENDENT (true axis) vs DEPENDENT (correlates with others)
+4. Source each dimension: research finding, user statement, or inference
+5. Test completeness: consider timing, funding, team, technology, market, legal dimensions
 
 ```
 RAW DIMENSION EXTRACTION:
@@ -46,45 +41,64 @@ DISCOVERY QUESTIONS:
 • "What would an expert add?"
 
 DIMENSIONS FOUND (raw, unvalidated):
-1. [dimension name] - source: [where identified]
-2. [dimension name] - source: [where identified]
-3. [dimension name] - source: [where identified]
+1. [dimension name] - type: [INDEPENDENT/DEPENDENT] - source: [where identified]
+2. [dimension name] - type: [INDEPENDENT/DEPENDENT] - source: [where identified]
+3. [dimension name] - type: [INDEPENDENT/DEPENDENT] - source: [where identified]
 ...
 
 [EXTRACT_COMPLETE for dimensions]
 ```
 
+**MINIMUM dimensions by depth: quick=3, standard=4, deep=5**
+
+---
+
 ## 02.2 EXTRACT: Option Enumeration
 
-Load method: `data/method-procedures/M002_Option_Enumeration.md`
+**M002 Option Enumeration (embedded):**
+1. For each dimension, list conventional options first
+2. Apply expansion prompts to surface unconventional options
+3. Always include "do nothing" or "status quo" option
+4. Consider contrarian choices and hybrid combinations
+5. Source each option: verified from research or assumed/inferred
 
-For each dimension, list ALL options:
+**Expansion prompts:**
+- "What would contrarian choose?"
+- "What's unconventional choice?"
+- "What if we combined options?"
+- "What's 'do nothing' option?"
 
 ```
 DIMENSION: [name]
 RAW OPTIONS:
-├── Option A: [description] - source: [where from?]
-├── Option B: [description] - source: [where from?]
-├── Option C: [description] - source: [where from?]
-└── [Missing options? Apply expansion prompts]
-
-EXPANSION PROMPTS:
-• "What would a contrarian choose?"
-• "What's the unconventional choice?"
-• "What if we combined options?"
-• "What's the 'do nothing' option?"
+├── Option A: [description] - source: [where from?] - status: [VERIFIED/ASSUMED]
+├── Option B: [description] - source: [where from?] - status: [VERIFIED/ASSUMED]
+├── Option C: [description] - source: [where from?] - status: [VERIFIED/ASSUMED]
+└── [Apply expansion prompts if <2 options]
 
 [EXTRACT_COMPLETE for options]
 ```
 
+**MINIMUM options by depth: quick=6 total, standard=12 total, deep=15 total**
+
+---
+
 ## 02.3 EXTRACT: Constraint Mapping
 
-Load method: `data/method-procedures/M003_Constraint_Mapping.md`
+**M003 Constraint Mapping (embedded):**
+1. Identify HARD constraints: impossible combinations (technical, legal, physical impossibility)
+2. Identify SOFT constraints: difficult but not impossible (resource, timing, political difficulty)
+3. Verify each constraint: is it truly impossible or just assumed difficult?
+4. Source constraints: cite evidence from research or mark as assumption
+5. Build exclusion matrix: which dimension combinations are ruled out
 
 ```
 RAW CONSTRAINTS:
-• [constraint 1] - type: HARD/SOFT - source: [evidence]
-• [constraint 2] - type: HARD/SOFT - source: [evidence]
+HARD CONSTRAINTS:
+• [constraint 1] - excluded: [D1:A + D2:B] - source: [evidence/assumption]
+
+SOFT CONSTRAINTS:
+• [constraint 2] - difficult: [D1:C + D3:A] - source: [evidence/assumption]
 
 [EXTRACT_COMPLETE for constraints]
 ```
@@ -137,6 +151,8 @@ COUNTER-CHECK #N:
 
 ## 02.5 RENDER: Build Morphological Box
 
+**PRECONDITION:** [VERIFY_COMPLETE] tag MUST exist. If missing → SEQUENCE_VIOLATION → HALT.
+
 ```
 ╔═══════════════════════════════════════════════════════════════════════════╗
 ║                         MORPHOLOGICAL BOX                                  ║
@@ -161,6 +177,8 @@ COUNTER-CHECK #N:
 [RENDER_COMPLETE]
 ```
 
+**Write output to option_map.yaml following schema from workflow.md.**
+
 ---
 
 ## POST-PHASE CHECKLIST (MANDATORY)
@@ -170,17 +188,17 @@ PHASE_02 COMPLETION CHECKLIST:
 
 □ ASSUMPTIONS_DECLARED logged?             [count: ___]
 □ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
-□ Dimensions discovered?                   [count: ___ (min: ___)]
-□ Options enumerated?                      [count: ___ (min: ___)]
+□ Dimensions discovered?                   [count: ___ (min per depth: quick=3, standard=4, deep=5)]
+□ Options enumerated?                      [count: ___ (min per depth: quick=6, standard=12, deep=15)]
 □ Each dimension verified for independence?[Y/N]
 □ Constraints mapped?                      [Y/N]
 □ Constraints tagged VERIFIED/ASSUMED?     [Y/N]
 □ Morphological box rendered?              [Y/N]
-□ Counter-checks performed?               [count: ___ (min: ___)]
+□ Counter-checks performed?               [count: ___ (min per depth: quick=1, standard=2, deep=3)]
 □ Expansion prompts applied?              [Y/N]
 
 CHECKLIST_STATUS: PASS | FAIL
-IF FAIL: Fix before proceeding.
+IF FAIL: Fix before proceeding or declare SCOPE_REDUCTION.
 ```
 
 ---
@@ -198,6 +216,8 @@ GATE_02 BINDING CHECK:
 □ Post-phase checklist PASSED               — [PASS/FAIL] — CRITICAL
 
 GATE_02 STATUS: OPEN | LOCKED
+
+IF LOCKED: Cannot proceed to Step 3. Fix failures or declare SCOPE_REDUCTION.
 ```
 
 ---
@@ -206,7 +226,7 @@ GATE_02 STATUS: OPEN | LOCKED
 
 ```
 □ Did mapping reveal new unknowns?
-  → YES: Return to Step 1 (if iterations remaining)
+  → YES: Return to Step 1 (if iterations remaining per depth limits)
 
 □ Did mapping reveal we misunderstood the problem?
   → YES: Return to Step 0
@@ -223,16 +243,21 @@ GATE_02 STATUS: OPEN | LOCKED
 ```
 LOOP COUNT: Step 1 ↔ Step 2 iterations: [N]
 
-□ If looping more than [quick:1 / standard:3 / deep:5] times:
-  → STOP: Either proceed with current map or ABORT
+MAX ITERATIONS BY DEPTH:
+- quick: 1 (no loops)
+- standard: 3
+- deep: unlimited
+
+□ If looping exceeds max for depth:
+  → STOP: Either proceed with current map OR declare SCOPE_REDUCTION with gaps flagged
 ```
 
 ---
 
 ## Transition
 
-- **If GATE_02 = OPEN and map is complete** → Proceed to Step 3
+- **If GATE_02 = OPEN** → Proceed to Step 3
 - **If knowledge gaps found AND iterations remaining** → Return to Step 1
-- **If knowledge gaps found BUT max loops reached** → Proceed with gaps flagged
+- **If knowledge gaps found BUT max loops reached** → Proceed with gaps flagged (log in process_log.yaml)
 - **If framing wrong** → Return to Step 0
-- **If no viable options exist** → Consider ABORT
+- **If no viable options exist** → ABORT with justification

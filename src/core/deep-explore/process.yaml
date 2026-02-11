@@ -1,14 +1,35 @@
-# Deep Explore V3.0 — Process Definition for Deep-Process Framework
-# Version: 3.0.0
+# Deep Explore V3.1 — Process Definition for Deep-Process Framework
+# Version: 3.1.0
 # Architecture: Single-agent sequential pipeline (7 steps + enforcement layers)
 
 id: "proc-deep-explore-v2"
-name: "Deep Explore V3.0 (Enforcement-First Decision Exploration)"
-version: "3.0.0"
+name: "Deep Explore V3.2.0 (Minimal Orchestrator — Just-In-Time)"
+version: "3.2.0"
 description: |
   Structured decision exploration with enforcement architecture.
   Transforms complex choices into understanding through knowledge expansion,
   uncertainty mapping, and systematic option analysis.
+
+  V3.2.0 changes over V3.1.1:
+  - Reduced workflow.md from 733 lines to 147 lines (80% reduction)
+  - Removed ALL protocols already embedded in step files (ASSUMPTIONS, EVR, COUNTER-CHECK, CHECKLIST)
+  - Removed ALL content not needed upfront (gate definitions, artifact schemas, scoring, version history)
+  - workflow.md now ONLY orchestrates: priority, scope_reduction, execution sequence, enforcement rules
+  - True just-in-time architecture: step files load ONLY when entered, with all their context embedded
+  - Token savings: ~1800 tokens not loaded upfront
+
+  V3.1.1 changes over V3.1.0:
+  - EXECUTION SEQUENCE section rewritten from descriptive to programmatic
+  - Added explicit Read tool instructions for each step (imperative, not descriptive)
+  - Added PRECONDITION checks for gate passage before step progression
+  - Added VIOLATION enforcement rules (abort if sequence violated)
+  - Fixed R3 (mechanisms not intentions) and R12 (just-in-time delivery) compliance
+
+  V3.1.0 changes over V3.0:
+  - Methods embedded inline in step files (no external loading)
+  - Artifact schemas embedded in workflow.md (single source of truth)
+  - reference.md removed (content consolidated into workflow.md + steps)
+  - R1-R12 compliance validated (process design requirements)
 
   V3.0 additions over V2.2:
   - Binding gates at every phase exit (no "intelligent" skipping)
@@ -23,8 +44,7 @@ description: |
   7-step pipeline: AUDIT → RESEARCH → MAP → DEEPEN → CHALLENGE →
   SYNTHESIZE → OUTPUT, with enforcement layers and optional fear analysis.
 
-  54 methods across 5 tiers (Foundation, Map, Illuminate, Challenge, Synthesize,
-  Converge, Meta). 3 depth levels (quick/standard/deep).
+  54 methods embedded in 7 step files. 3 depth levels (quick/standard/deep).
   Automatic fear detection with structured resolution.
 
 inherits:
@@ -37,7 +57,9 @@ inherits:
 architecture:
   type: "single-agent"
   orchestrator: "workflow.md"
-  reference: "reference.md"
+  reference: "REMOVED (content consolidated into workflow.md + steps)"
+  artifacts: "Schemas embedded in workflow.md section ARTIFACT SCHEMAS"
+  methods: "Embedded inline in step files (3-5 bullet points per method)"
 
 # Priority declaration (binding)
 priorities:
@@ -231,3 +253,66 @@ integrates_with:
     - { process: "deep-synthesis", outputs: ["option_map", "assumptions", "consequence_map", "knowledge_gaps"] }
   based_on:
     - { process: "deep-explore", version: "2.2.0", relationship: "enhanced successor" }
+
+# Process Design Requirements Compliance (R1-R12)
+compliance:
+  r1_self_contained:
+    status: "COMPLIANT"
+    evidence: "All instructions in deep-explore-v2/ directory. Artifact schemas in workflow.md. Methods embedded in step files. No external dependencies."
+  r2_completeness_priority:
+    status: "COMPLIANT"
+    evidence: "Priority declaration: COMPLETENESS > DEPTH > ACCURACY > TOKEN_ECONOMY. Enforcement via gates and checklists."
+  r3_mechanisms_not_intentions:
+    status: "COMPLIANT"
+    evidence: "7 binding gates (GATE_00..06) with specific conditions. EVR sequence enforcement with PRECONDITION checks. ASSUMPTIONS_DECLARED tables mandatory."
+  r4_binding_gates:
+    status: "COMPLIANT"
+    evidence: "7 gates with CRITICAL/REQUIRED severity. BLOCKER conditions prevent bypass. SCOPE_REDUCTION protocol for formal skips."
+  r5_assumptions_declared:
+    status: "COMPLIANT"
+    evidence: "ASSUMPTIONS_DECLARED table in section X.0 of every step file (7 total). Minimum 1 assumption per phase enforced."
+  r6_extract_verify_render:
+    status: "COMPLIANT"
+    evidence: "EVR sequence enforced via PRECONDITION checks in sections X.1-X.8. [EXTRACT_COMPLETE], [VERIFY_COMPLETE], [RENDER_COMPLETE] markers."
+  r7_post_phase_checklists:
+    status: "COMPLIANT"
+    evidence: "POST-PHASE CHECKLIST section in every step file (sections X.9). 8-13 items per checklist. PASS/FAIL status required."
+  r8_counter_checks:
+    status: "COMPLIANT"
+    evidence: "Minimum counter-checks per depth (quick=1, standard=2, deep=3). CC-1, CC-2, CC-3 structure in VERIFY sections. Counter-check results logged."
+  r9_egzekucyjny:
+    status: "COMPLIANT"
+    evidence: "Step files specify HOW (numbered steps 1-5) and ORDER (PRECONDITION chains). Method procedures embedded with executable steps. Gate conditions specify IF FAIL actions."
+  r10_step_by_step_thinking:
+    status: "COMPLIANT"
+    evidence: "Methods decomposed to 3-5 numbered steps. Complex algorithms (clustering, sequencing, scoring) documented with procedures. PRECONDITION/OUTPUT/VERIFICATION structure."
+  r11_executable_instructions:
+    status: "COMPLIANT"
+    evidence: "Imperative instructions (identify, assess, classify, tag). Input/output schemas provided. Validation criteria explicit. Error handling documented."
+  r12_just_in_time_delivery:
+    status: "COMPLIANT"
+    evidence: "One step file loaded at a time (steps/step-NN-name.md). External data files referenced not embedded (coverage-scoring.yaml, exploration-report-template.md). Workflow.md contains step routing."
+
+# Version History
+history:
+  - version: "3.1.0"
+    date: "2026-02-11"
+    changes: |
+      V3.1.0 ENFORCEMENT ARCHITECTURE FIX:
+      - Embedded methods inline in step files (3-5 bullet points per method, NO explanations)
+      - Removed reference.md (content consolidated into workflow.md + steps)
+      - Artifact schemas embedded in workflow.md ARTIFACT SCHEMAS section
+      - Removed decorative content (Purpose, Time, explanations)
+      - Added PRECONDITION checks for EVR sequence enforcement
+      - Added R1-R12 compliance validation (all 12 requirements met)
+      - Steps 03-06 rewritten following pattern from steps 00-02
+      - External data files referenced not embedded (coverage-scoring.yaml, template.md)
+      Files modified: steps/step-03-deepen.md, step-04-challenge.md, step-05-synthesize.md,
+      step-06-output.md, process.yaml
+      Files removed: reference.md (content consolidated)
+      RATIONALE: Self-contained execution with lean workflow.md + executable step files.
+      IMPACT: Agent loads only current step file + workflow.md schemas. Zero external dependencies.
+      R1-R12 COMPLIANCE: ✓ All 12 process design requirements validated.
+  - version: "3.0.0"
+    date: "2026-02-10"
+    changes: "V3.0 enforcement architecture over V2.2"

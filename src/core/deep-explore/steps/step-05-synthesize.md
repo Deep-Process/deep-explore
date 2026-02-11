@@ -1,289 +1,346 @@
 # Step 05: Synthesize
 
-## Purpose
+INPUTS (from workflow.md ARTIFACT SCHEMAS):
+- option_map.yaml (from Step 02)
+- consequence_map.yaml (from Step 03)
+- challenge_results.yaml (from Step 04)
+- all assumptions_declared (from all previous phases)
 
-Organize findings into actionable understanding.
+OUTPUTS:
+- synthesis.yaml
 
-**Time:** 10-15 min
-
-**Inputs:** Challenged Option Map, Consequence Map
-
-**Outputs:** Synthesis ready for final report
-
-**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_05
+ENFORCEMENT: ASSUMPTIONS_DECLARED, EVR, COUNTER_CHECKS (min 1/2/3), POST-PHASE CHECKLIST, GATE_05
 
 ---
 
-## 05.0 ASSUMPTIONS_DECLARED (MANDATORY)
+## 05.0 ASSUMPTIONS_DECLARED
 
-**Execute BEFORE any synthesis begins.**
+| ID    | Assumption                     | Type         | Confidence | Falsification Criterion       |
+|-------|--------------------------------|--------------|------------|-------------------------------|
+| H-5xx | [clustering criteria]          | INTERPRETIVE | HIGH/MED/LOW | [better clustering exists]   |
+| H-5xx | [decision sequence]            | DOMAIN       | [level]    | [order is wrong]             |
+| H-5xx | [readiness assessment]         | CONTEXTUAL   | [level]    | [not ready when said ready]  |
 
-```
-ASSUMPTIONS_DECLARED for Phase 5:
-┌──────┬──────────────────────────────────────┬──────────────┬────────────┬──────────────────────────────┐
-│ ID   │ Assumption                           │ Type         │ Confidence │ Falsification Criterion      │
-├──────┼──────────────────────────────────────┼──────────────┼────────────┼──────────────────────────────┤
-│ H-5xx│ "[assumed clustering criteria]"      │ INTERPRETIVE │ HIGH/MED/  │ "[better clustering exists]"  │
-│ H-5xx│ "[assumed decision sequence]"        │ DOMAIN       │ LOW        │ "[order is wrong]"           │
-│ H-5xx│ "[assumed readiness assessment]"     │ CONTEXTUAL   │            │ "[not ready when said ready]" │
-└──────┴──────────────────────────────────────┴──────────────┴────────────┴──────────────────────────────┘
-```
+Minimum 1 assumption declared. Add rows as needed.
 
 ---
 
 ## 05.1 EXTRACT: Raw Insights Collection
 
-Load method: `data/method-procedures/E003_Minimal_Assertions.md`
+PRECONDITION: None (first extraction in this phase)
 
-**Gather all raw insights from previous phases:**
+METHOD Minimal Assertions (E003) (embedded):
+1. Gather all raw insights from Phases 0-4
+2. Compress each insight to minimal form (half the words, keep accuracy)
+3. Tag each with usefulness (what decision it helps)
+4. Tag with STATUS: VERIFIED | ASSUMED
 
+OUTPUT FORMAT:
+```yaml
+raw_insights:
+  from_phase_0: ["[insight - VERIFIED/ASSUMED]", ...]
+  from_phase_1: ["[insight - VERIFIED/ASSUMED]", ...]
+  from_phase_2: ["[insight - VERIFIED/ASSUMED]", ...]
+  from_phase_3: ["[insight - VERIFIED/ASSUMED]", ...]
+  from_phase_4: ["[insight - VERIFIED/ASSUMED]", ...]
 ```
-RAW INSIGHTS FROM EXPLORATION:
-From Phase 0 (Knowledge Audit):
-• [insight 1]
-• [insight 2]
-
-From Phase 1 (Research):
-• [insight 3]
-• [insight 4]
-
-From Phase 2 (Map):
-• [insight 5]
-• [insight 6]
-
-From Phase 3 (Deepen):
-• [insight 7]
-• [insight 8]
-
-From Phase 4 (Challenge):
-• [insight 9]
-• [insight 10]
-
-RAW CLUSTER CANDIDATES:
-Options that share characteristics:
-• [group 1: options with similar risk profile]
-• [group 2: options with similar resource needs]
-• [group 3: options with similar philosophy]
 
 [EXTRACT_COMPLETE]
-```
 
 ---
 
-## 05.2 VERIFY: Validate Synthesis Elements
+## 05.2 EXTRACT: Cluster Candidates
 
+PRECONDITION: [EXTRACT_COMPLETE from 05.1]
+
+METHOD Clustering (embedded):
+1. Identify options that share characteristics
+2. Group by: risk profile, resource needs, reversibility, speed, philosophy
+3. Aim for 2-5 clusters (avoid over-clustering)
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+cluster_candidates:
+  - cluster_name: "[descriptive name]"
+    shared_characteristic: "[what unifies - VERIFIED/ASSUMED]"
+    options: ["[option ref]", ...]
+    clustering_criteria: RISK_PROFILE | RESOURCE_NEED | REVERSIBILITY | SPEED | PHILOSOPHY
 ```
-COMPRESSION VERIFICATION:
-For each insight, ask: "Can I say this in half the words AND keep accuracy?"
 
-MINIMAL ASSERTIONS (verified):
-┌────┬─────────────────────────────────────┬──────────┬────────────────────┐
-│ #  │ Assertion                           │ Status   │ Useful for         │
-├────┼─────────────────────────────────────┼──────────┼────────────────────┤
-│ 1  │ "[compressed principle]"            │ VERIFIED │ [what decision]    │
-│ 2  │ "[compressed principle]"            │ ASSUMED  │ [what decision]    │
-│ 3  │ "[compressed principle]"            │ VERIFIED │ [what decision]    │
-└────┴─────────────────────────────────────┴──────────┴────────────────────┘
+[EXTRACT_COMPLETE]
 
-CLUSTER VALIDATION:
-┌──────────────────┬──────────┬────────────────────────────────────────────┐
-│ Cluster          │ Valid?   │ Reason                                     │
-├──────────────────┼──────────┼────────────────────────────────────────────┤
-│ [cluster A name] │ Y/N      │ Options within feel similar? Across feel   │
-│                  │          │ different? 2-5 clusters total?             │
-└──────────────────┴──────────┴────────────────────────────────────────────┘
+---
 
-CLUSTERING CRITERIA USED:
-□ RISK PROFILE — similar risk/reward balance
-□ RESOURCE NEED — similar investment required
-□ REVERSIBILITY — similar ability to change later
-□ SPEED — similar time to implement/results
-□ PHILOSOPHY — similar underlying approach
+## 05.3 VERIFY: Compression Verification
+
+PRECONDITION: [EXTRACT_COMPLETE from 05.2]
+
+VERIFICATION:
+1. Check each insight is minimal (no unnecessary words)
+2. Verify accuracy preserved after compression
+3. Confirm usefulness tag is specific (not vague)
+
+METHOD Minimal Assertions (E003) verification:
+1. For each assertion: ask "Can I say this in half the words AND keep accuracy?"
+2. If yes: compress further
+3. If no: mark as minimal
+
+OUTPUT FORMAT (in synthesis.yaml):
+```yaml
+minimal_assertions:
+  - id: MA-001
+    assertion: "[key learning - 1 sentence - VERIFIED/ASSUMED]"
+    useful_for: "[specific decision]"
+    supporting_evidence: ["[reference]", ...]
+```
 
 [VERIFY_COMPLETE]
-```
 
-**★ KEY_CLAIM: "Clusters represent genuinely distinct strategic paths, not arbitrary groupings."**
+---
 
-**COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):**
+## 05.4 VERIFY: Cluster Validation
+
+PRECONDITION: [VERIFY_COMPLETE from 05.3]
+
+VERIFICATION:
+1. Check clusters are genuinely distinct (not overlapping)
+2. Verify 2-5 clusters total (not fragmented or monolithic)
+3. Confirm options within cluster feel similar
+4. Confirm options across clusters feel different
+
+★ KEY_CLAIM: "Clusters represent genuinely distinct strategic paths, not arbitrary groupings"
+
+COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):
 ```
-COUNTER-CHECK #N:
+CC-1:
   claim: "These clusters capture the distinct strategic options"
   disproof: "An alternative clustering would be more useful or accurate"
-  search_attempt: "[try clustering by different dimension, check if clusters
-                    overlap too much, check if a cluster is missing]"
+  search: "[try clustering by different dimension: risk vs resource vs philosophy]"
   result: CONFIRMED | WEAKENED | REFUTED
   action: [if WEAKENED: revise clustering]
+
+CC-2:
+  claim: "[cluster A is coherent and distinct from B]"
+  disproof: "Options within cluster A are too different OR overlap with cluster B"
+  search: "[check if cluster members share core characteristic, check boundaries]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [if WEAKENED: reconsider cluster definition]
+
+CC-3 (if deep):
+  claim: "The number of clusters (N) is appropriate"
+  disproof: "Too many clusters (fragmentation) OR too few (loss of distinctions)"
+  search: "[try merging clusters, try splitting clusters]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [if WEAKENED: adjust cluster count]
 ```
+
+OUTPUT FORMAT (in synthesis.yaml):
+```yaml
+strategic_clusters:
+  - cluster_id: CL-001
+    name: "[cluster name]"
+    core_philosophy: "[underlying approach - VERIFIED/ASSUMED]"
+    options: ["[option ref]", ...]
+    best_for: "[situation - VERIFIED/ASSUMED]"
+    requires: ["[resources/skills/conditions - VERIFIED/ASSUMED]", ...]
+    risk_profile: HIGH | MEDIUM | LOW
+    reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+    time_to_results: FAST | MEDIUM | SLOW
+    key_tradeoff: "[what sacrificed - VERIFIED/ASSUMED]"
+```
+
+[VERIFY_COMPLETE]
 
 ---
 
-## 05.3 RENDER: Synthesis Output
+## 05.5 EXTRACT: Decision Sequence
 
-### Strategic Clusters
+PRECONDITION: [VERIFY_COMPLETE from 05.4]
 
-```
-CLUSTER A: "[descriptive name]"
-├── Configuration: [D1:X + D2:Y + ...]
-├── Core philosophy: [underlying approach]
-├── Best for: [what situation]
-├── Requires: [resources, skills, conditions]
-├── Risk profile: [HIGH/MED/LOW]
-├── Reversibility: [HIGH/MED/LOW/IRREVERSIBLE]
-├── Time to results: [fast/medium/slow]
-└── Key trade-off: [what you sacrifice]
+METHOD Sequencing (embedded):
+1. Identify dependencies (what must be decided first)
+2. Classify timing: NOW (prerequisite) | AFTER_[dependency] | DELAY_UNTIL_[condition] | WILL_EMERGE
+3. Document rationale for sequence
+4. Tag with STATUS: VERIFIED | ASSUMED
 
-CLUSTER B: "[descriptive name]"
-├── Configuration: [D1:A + D2:B + ...]
-├── Core philosophy: [underlying approach]
-├── Best for: [what situation]
-├── Requires: [resources, skills, conditions]
-├── Risk profile: [HIGH/MED/LOW]
-├── Reversibility: [HIGH/MED/LOW/IRREVERSIBLE]
-├── Time to results: [fast/medium/slow]
-└── Key trade-off: [what you sacrifice]
+OUTPUT FORMAT:
+```yaml
+decision_sequence:
+  - order: 1
+    decision: "[what to decide - VERIFIED/ASSUMED]"
+    timing: NOW | AFTER_[dependency] | DELAY_UNTIL_[condition] | WILL_EMERGE
+    rationale: "[why this order - VERIFIED/ASSUMED]"
+  - order: 2
+    decision: "[what to decide - VERIFIED/ASSUMED]"
+    timing: AFTER_[decision 1]
+    rationale: "[why this order - VERIFIED/ASSUMED]"
 ```
 
-### Cluster Comparison Matrix
+[EXTRACT_COMPLETE]
 
-```
-┌─────────────────┬───────────────┬───────────────┬───────────────┐
-│ Criterion       │ Cluster A     │ Cluster B     │ Cluster C     │
-├─────────────────┼───────────────┼───────────────┼───────────────┤
-│ Risk            │ HIGH/MED/LOW  │ HIGH/MED/LOW  │ HIGH/MED/LOW  │
-│ Investment      │ $$$           │ $$            │ $             │
-│ Time to results │ fast/med/slow │ fast/med/slow │ fast/med/slow │
-│ Reversibility   │ HIGH/MED/LOW  │ HIGH/MED/LOW  │ HIGH/MED/LOW  │
-│ Upside          │ HIGH/MED/LOW  │ HIGH/MED/LOW  │ HIGH/MED/LOW  │
-│ Complexity      │ HIGH/MED/LOW  │ HIGH/MED/LOW  │ HIGH/MED/LOW  │
-└─────────────────┴───────────────┴───────────────┴───────────────┘
+---
 
-BEST CLUSTER FOR:
-• Maximize upside: Cluster ___
-• Minimize risk: Cluster ___
-• Move fast: Cluster ___
-• Preserve optionality: Cluster ___
-```
+## 05.6 EXTRACT: Readiness Assessment
 
-### Independent Decisions
+PRECONDITION: [EXTRACT_COMPLETE from 05.5]
 
-```
-INDEPENDENT DECISIONS (not tied to cluster choice):
-• [decision] — can be made regardless of cluster
-• [decision] — orthogonal to main choice
+VERIFICATION:
+1. For each decision: assess readiness (READY | ALMOST | NOT_READY)
+2. Identify what would help (specific actions)
+3. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT (in synthesis.yaml):
+```yaml
+readiness_assessment:
+  - decision: "[what to decide]"
+    readiness: READY | ALMOST | NOT_READY
+    what_would_help: "[specific action - VERIFIED/ASSUMED]"
+    can_decide_now: YES | NO
+    missing_information: ["[gap - VERIFIED/ASSUMED]", ...]
 ```
 
-### Decision Sequence
+[VERIFY_COMPLETE]
 
-```
-1. DECIDE FIRST (prerequisite):
-   • [decision] — because: [why first]
+---
 
-2. DECIDE NEXT (after #1):
-   • [decision] — depends on: [what]
+## 05.7 EXTRACT: Remaining Information Gaps
 
-3. CAN WAIT (preserve optionality):
-   • [decision] — can delay until: [trigger]
+PRECONDITION: [VERIFY_COMPLETE from 05.6]
 
-4. WILL EMERGE (don't force):
-   • [decision] — will become clear when: [condition]
-```
+METHOD Information Questions (E007) (embedded):
+1. Identify highest-value questions: "Which information would change my decision the most?"
+2. Identify ignored obvious: "What is everyone ignoring because it seems obvious?"
+3. Tag with impact: HIGH | MEDIUM
+4. Tag with STATUS: VERIFIED | ASSUMED
 
-### Decision Readiness Assessment
-
-```
-┌─────────────────────┬────────────┬────────────────────────────┐
-│ Decision            │ Readiness  │ What would help            │
-├─────────────────────┼────────────┼────────────────────────────┤
-│ [decision 1]        │ READY      │ -                          │
-│ [decision 2]        │ ALMOST     │ [verify X]                 │
-│ [decision 3]        │ NOT READY  │ [research Y]               │
-└─────────────────────┴────────────┴────────────────────────────┘
+OUTPUT FORMAT (in synthesis.yaml):
+```yaml
+information_gaps:
+  highest_value_questions:
+    - question: "[what to learn - VERIFIED/ASSUMED]"
+      impact: HIGH | MEDIUM
+      would_change_decision: "[how - VERIFIED/ASSUMED]"
+  ignored_obvious:
+    - observation: "[what's overlooked - VERIFIED/ASSUMED]"
+      why_ignored: "[reason - VERIFIED/ASSUMED]"
 ```
 
-### Remaining Information Gaps
+[EXTRACT_COMPLETE]
 
-Load method: `data/method-procedures/E007_Information_Questions.md`
+---
 
+## 05.8 RENDER: Synthesis Output
+
+PRECONDITION: [EXTRACT_COMPLETE from 05.7]
+
+OUTPUT (synthesis.yaml — complete structure):
+```yaml
+minimal_assertions:
+  - id: MA-001
+    assertion: "[key learning - 1 sentence - VERIFIED/ASSUMED]"
+    useful_for: "[specific decision]"
+    supporting_evidence: ["[reference]", ...]
+
+strategic_clusters:
+  - cluster_id: CL-001
+    name: "[cluster name]"
+    core_philosophy: "[approach - VERIFIED/ASSUMED]"
+    options: ["[option ref]", ...]
+    best_for: "[situation - VERIFIED/ASSUMED]"
+    requires: ["[resources - VERIFIED/ASSUMED]", ...]
+    risk_profile: HIGH | MEDIUM | LOW
+    reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+    time_to_results: FAST | MEDIUM | SLOW
+    key_tradeoff: "[what sacrificed - VERIFIED/ASSUMED]"
+
+cluster_comparison:
+  criteria: [RISK, INVESTMENT, TIME_TO_RESULTS, REVERSIBILITY, UPSIDE, COMPLEXITY]
+  matrix:
+    - cluster_id: CL-001
+      risk: HIGH | MEDIUM | LOW
+      investment: HIGH | MEDIUM | LOW
+      time_to_results: FAST | MEDIUM | SLOW
+      reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+      upside: HIGH | MEDIUM | LOW
+      complexity: HIGH | MEDIUM | LOW
+  best_cluster_for:
+    maximize_upside: "[cluster_id]"
+    minimize_risk: "[cluster_id]"
+    move_fast: "[cluster_id]"
+    preserve_optionality: "[cluster_id]"
+
+decision_sequence:
+  - order: 1
+    decision: "[what to decide - VERIFIED/ASSUMED]"
+    timing: NOW | AFTER_[dependency] | DELAY_UNTIL_[condition]
+    rationale: "[why this order - VERIFIED/ASSUMED]"
+
+readiness_assessment:
+  - decision: "[what to decide]"
+    readiness: READY | ALMOST | NOT_READY
+    what_would_help: "[specific action - VERIFIED/ASSUMED]"
+    can_decide_now: YES | NO
+    missing_information: ["[gap - VERIFIED/ASSUMED]", ...]
+
+information_gaps:
+  highest_value_questions:
+    - question: "[what to learn - VERIFIED/ASSUMED]"
+      impact: HIGH | MEDIUM
+  ignored_obvious:
+    - observation: "[what's overlooked - VERIFIED/ASSUMED]"
+
+independent_decisions:
+  - decision: "[not tied to cluster choice - VERIFIED/ASSUMED]"
+    orthogonal_to: "[main choice]"
 ```
-HIGHEST-VALUE QUESTIONS:
-"Which information would change my decision the most?"
-• [question 1] — impact: [HIGH/MED]
-• [question 2] — impact: [HIGH/MED]
 
-IGNORED OBVIOUS:
-"What is everyone ignoring because it seems obvious?"
-• [observation]
-```
-
-```
 [RENDER_COMPLETE]
-```
 
 ---
 
-## POST-PHASE CHECKLIST (MANDATORY)
+## 05.9 POST-PHASE CHECKLIST
 
-```
-PHASE_05 COMPLETION CHECKLIST:
-
-□ ASSUMPTIONS_DECLARED logged?             [count: ___]
-□ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
-□ Minimal assertions produced?             [Y/N, count: ___]
-□ Strategic clusters identified?           [Y/N, count: ___]
-□ Clusters validated (2-5, distinct)?      [Y/N]
-□ Comparison matrix built?                 [Y/N]
-□ Decision sequence defined?               [Y/N]
-□ Readiness assessed per decision?         [Y/N]
-□ Remaining gaps identified?               [Y/N]
-□ Counter-checks performed?               [count: ___ (min: ___)]
+□ All outputs produced? [Y/N — list missing if N]
+□ ASSUMPTIONS_DECLARED logged? [count ≥ 1]
+□ EVR sequence respected? [Y/N — EXTRACT→VERIFY→RENDER]
+□ Counter-checks performed? [count ≥ min per depth]
+□ Key claims marked ★? [count ≥ 1]
+□ ASSUMED items flagged? [Y/N]
+□ Artifacts schema-compliant? [Y/N]
+□ Minimal assertions produced? [Y/N]
+□ Strategic clusters identified (2-5)? [Y/N — count: ___]
+□ Clusters validated (distinct)? [Y/N]
+□ Decision sequence defined? [Y/N]
+□ Readiness assessed per decision? [Y/N]
+□ Remaining gaps identified? [Y/N]
 
 CHECKLIST_STATUS: PASS | FAIL
-IF FAIL: Fix before proceeding.
-```
+
+IF FAIL: Fix issues before proceeding.
 
 ---
 
-## GATE_05: SYNTHESIZE EXIT
+## 05.10 GATE_05 CONDITIONS
 
-```
-GATE_05 BINDING CHECK:
+CRITICAL (must pass):
+□ Minimal assertions produced — IF FAIL → SCOPE_REDUCTION_DECLARATION required
+□ Strategic clusters identified — IF FAIL → SCOPE_REDUCTION_DECLARATION required
+□ Post-phase checklist PASSED — IF FAIL → fix issues
 
-□ Minimal assertions produced              — [PASS/FAIL] — CRITICAL
-□ Strategic clusters identified            — [PASS/FAIL] — CRITICAL
-□ Decision sequence defined                — [PASS/FAIL] — REQUIRED
-□ Readiness assessed                       — [PASS/FAIL] — REQUIRED
-□ Counter-checks performed                 — [PASS/FAIL] — REQUIRED
-□ Post-phase checklist PASSED              — [PASS/FAIL] — CRITICAL
+REQUIRED (should pass):
+□ Decision sequence defined — IF FAIL → log + flag in process_log
+□ Readiness assessed — IF FAIL → log + flag in process_log
+□ Counter-checks ≥ minimum — IF FAIL → perform additional checks
 
-GATE_05 STATUS: OPEN | LOCKED
-```
+GATE_STATUS: OPEN | LOCKED
 
----
-
-## Output: Synthesis Summary
-
-```
-╔═══════════════════════════════════════════════════════════════╗
-║  SYNTHESIS SUMMARY                                             ║
-╠═══════════════════════════════════════════════════════════════╣
-║                                                                ║
-║  MINIMAL ASSERTIONS: [count]                                   ║
-║  STRATEGIC CLUSTERS: [count]                                   ║
-║                                                                ║
-║  DECISION READINESS:                                           ║
-║  • Ready:     [count]                                          ║
-║  • Almost:    [count]                                          ║
-║  • Not Ready: [count]                                          ║
-║                                                                ║
-║  REMAINING GAPS: [count]                                       ║
-║  COUNTER-CHECKS: [count]                                       ║
-║                                                                ║
-╚═══════════════════════════════════════════════════════════════╝
-```
+IF LOCKED: Cannot proceed. Fix issues or execute SCOPE_REDUCTION protocol.
 
 ---
 
-## Transition
+## 05.11 TRANSITION
 
-- **If GATE_05 = OPEN** → Proceed to Step 6 (always — synthesis is complete)
+IF GATE_05 = OPEN:
+  → Load next step file: steps/step-06-output.md
+  → Continue to Phase 6 (always — synthesis is complete)

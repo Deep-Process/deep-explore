@@ -1,31 +1,20 @@
 # Step 01: Research
 
-## Purpose
-
-Fill critical knowledge gaps identified in Step 0 BEFORE mapping options.
-
-**Time:** 15-30 min (Quick), 1-2 hours (Standard)
-
-**Inputs:** Research Queue from Step 0, Knowledge Map
-
-**Outputs:** Research Summary, Updated Knowledge Map
-
-**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_01
+**INPUTS:** research_queue.yaml (from Step 0)
+**OUTPUTS:** Updated research_queue.yaml with findings
+**ENFORCEMENT:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_01
 
 ---
 
 ## 01.0 ASSUMPTIONS_DECLARED (MANDATORY)
-
-**Execute BEFORE any research begins.**
 
 ```
 ASSUMPTIONS_DECLARED for Phase 1:
 ┌──────┬──────────────────────────────────────┬──────────────┬────────────┬──────────────────────────────┐
 │ ID   │ Assumption                           │ Type         │ Confidence │ Falsification Criterion      │
 ├──────┼──────────────────────────────────────┼──────────────┼────────────┼──────────────────────────────┤
-│ H-1xx│ "[assumed source reliability]"       │ CONTEXTUAL   │ HIGH/MED/  │ "[source found unreliable]"  │
-│ H-1xx│ "[assumed domain state]"             │ DOMAIN       │ LOW        │ "[domain changed]"           │
-│ H-1xx│ "[interpretive choice about scope]"  │ INTERPRETIVE │            │ "[scope is different]"       │
+│ H-1xx│ "[assumed source reliability]"       │ CONTEXTUAL   │ HIGH/MED/  │ "[source contradicted]"      │
+│ H-1xx│ "[assumed research completeness]"    │ INTERPRETIVE │ LOW        │ "[key source missing]"       │
 └──────┴──────────────────────────────────────┴──────────────┴────────────┴──────────────────────────────┘
 ```
 
@@ -33,104 +22,107 @@ ASSUMPTIONS_DECLARED for Phase 1:
 
 ## 01.1 EXTRACT: Execute Research Queue
 
-Load: `data/research-methods.md`
+**Execute by priority: P1 first, then P2, then P3 (if time permits per depth).**
 
-**For each item in Research Queue by priority — gather raw data FIRST:**
+**Research execution by depth:**
+- quick: Top 2-3 P1 items only
+- standard: All P1, all P2 items
+- deep: All P1, P2, P3 + exploratory research
+
+**E007 Information Questions (embedded — for prioritization):**
+1. Which research question, if answered, would most reduce uncertainty?
+2. Which question has highest decision impact?
+3. Which questions are testable vs unknowable?
+4. Rank by: (uncertainty_reduction × decision_impact) / effort
+5. Execute highest-value questions first
 
 ```
-RESEARCH ITEM: [question]
-PRIORITY: [P1/P2/P3]
-METHOD: [web search / docs / experiment / ask expert]
+RESEARCH EXECUTION LOG:
 
-RAW FINDINGS (uninterpreted):
-• [raw finding 1] - source: [url/reference]
-• [raw finding 2] - source: [url/reference]
-• [raw finding 3] - source: [url/reference]
+ITEM: R-001 (Priority: P1)
+QUESTION: "[research question]"
+METHOD: [web search / documentation / experiment / expert consultation]
+SOURCES CONSULTED: ["[source 1]", "[source 2]"]
+RAW FINDINGS:
+• [finding 1 from source 1]
+• [finding 2 from source 2]
+• [finding 3 synthesis]
 
-NEW RAW QUESTIONS DISCOVERED: [list any]
+ITEM: R-002 (Priority: P2)
+QUESTION: "[research question]"
+METHOD: [research method]
+SOURCES CONSULTED: ["[source]"]
+RAW FINDINGS:
+• [finding 1]
 
-[EXTRACT_COMPLETE for item N]
+[EXTRACT_COMPLETE for research]
 ```
-
-**ENFORCEMENT:** Do NOT interpret findings yet. Do NOT assign confidence. Raw data only.
-
-**Depth adjustment for extraction scope:**
-- quick: Extract top 2-3 items only
-- standard: Extract all P1 and P2 items
-- deep: Extract all items + exploratory research
 
 ---
 
-## 01.2 VERIFY: Validate Research Findings
-
-**For each extracted finding, verify against evidence:**
+## 01.2 VERIFY: Source and Finding Validation
 
 ```
 VERIFICATION LOG:
 
-ITEM: [question]
-┌────┬──────────────────────────┬───────────────┬──────────┬────────────────────┐
-│ #  │ Finding                  │ Source        │ Status   │ Confidence         │
-├────┼──────────────────────────┼───────────────┼──────────┼────────────────────┤
-│ 1  │ [finding]                │ [url/ref]     │ VERIFIED │ HIGH               │
-│ 2  │ [finding]                │ [url/ref]     │ ASSUMED  │ MED — reason: ___  │
-│ 3  │ [finding]                │ [conflicting] │ CONTRA-  │ LOW — conflict: ___|
-│    │                          │               │ DICTED   │                    │
-└────┴──────────────────────────┴───────────────┴──────────┴────────────────────┘
+FINDING VALIDATION:
+┌────┬──────────────────────┬──────────┬─────────────────────────┐
+│ ID │ Finding              │ Status   │ Source / Reason         │
+├────┼──────────────────────┼──────────┼─────────────────────────┤
+│ F-1│ "[finding]"          │ VERIFIED │ Source: [citation/URL]  │
+│ F-2│ "[finding]"          │ ASSUMED  │ Reason: [inference]     │
+│ F-3│ "[finding]"          │ VERIFIED │ Source: [citation]      │
+└────┴──────────────────────┴──────────┴─────────────────────────┘
 
-CLEAR ANSWER:
-→ Move to KNOWN FACTS with source — status: VERIFIED
-
-PARTIAL ANSWER:
-→ Record, mark confidence, decide: research more or accept partial?
-
-CONFLICTING INFO:
-→ Record ALL positions, note conflict, assess source reliability
-
-NO INFO FOUND:
-→ Mark as TRUE UNKNOWN, assess: can we proceed without?
-
-NEW QUESTIONS:
-→ Assess priority, add to queue if HIGH, park if LOW
+QUALITY CHECKS:
+□ All P1 items addressed?                       [Y/N]
+□ Sources credible and cited?                   [Y/N]
+□ Findings tagged VERIFIED/ASSUMED?             [Y/N]
+□ Contradictions identified and noted?          [Y/N]
 
 [VERIFY_COMPLETE]
 ```
 
-**★ KEY_CLAIM for each HIGH-confidence finding.**
+**★ KEY_CLAIM: Each VERIFIED finding is genuinely sourced, not assumed.**
 
 **COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):**
 ```
 COUNTER-CHECK #N:
-  claim: "[research finding stated as fact]"
-  disproof: "[what evidence would show this is wrong]"
-  search_attempt: "[what was tried]"
+  claim: "[research finding]"
+  disproof: "Source is unreliable, outdated, or misinterpreted"
+  search_attempt: "[check source date, author credibility, alternative sources]"
   result: CONFIRMED | WEAKENED | REFUTED
-  action: [none | reduce confidence | investigate further]
+  action: [none | downgrade to ASSUMED | remove finding]
 ```
 
 ---
 
 ## 01.3 RENDER: Update Knowledge Map
 
-**Only after verification is complete — produce formatted output:**
+**PRECONDITION:** [VERIFY_COMPLETE] tag MUST exist. If missing → SEQUENCE_VIOLATION → HALT.
 
 ```
 KNOWLEDGE MAP UPDATE:
 
-MOVE TO KNOWN FACTS:
-+ [finding] - source: [reference] - status: VERIFIED
+NEW KNOWN ITEMS (from research):
+• [item] — source: [R-001 finding F-1]
+• [item] — source: [R-002 finding F-2]
 
-UPDATE ASSUMPTIONS:
-~ [assumption] - confidence now: [new level] - reason: [H-ID updated]
+RESOLVED UNKNOWNS:
+• [previous unknown] → NOW KNOWN: [finding]
 
-REMOVE FROM UNKNOWNS:
-- [question] - answered by: [reference]
+NEW UNKNOWNS DISCOVERED (from research):
+• [new gap discovered during research]
+• [new gap discovered during research]
 
-ADD TO UNKNOWNS:
-+ [new question] - priority: [P1-P4]
+ASSUMPTIONS UPDATED:
+• H-002 confidence: MED → HIGH (research confirmed)
+• H-003 status: REFUTED (research contradicted)
 
 [RENDER_COMPLETE]
 ```
+
+**Write updated findings to research_queue.yaml following schema from workflow.md.**
 
 ---
 
@@ -139,16 +131,15 @@ ADD TO UNKNOWNS:
 ```
 PHASE_01 COMPLETION CHECKLIST:
 
-□ ASSUMPTIONS_DECLARED logged?             [count: ___]
-□ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
-□ Research items executed?                 [count: ___ of ___ planned]
-  - P1 items completed: [count]
-  - P2 items completed: [count]
-□ Findings verified with sources?          [Y/N]
-□ Each finding tagged VERIFIED/ASSUMED?    [Y/N]
-□ Counter-checks performed?               [count: ___ (min: ___)]
-□ Knowledge map updated?                  [Y/N]
-□ New questions added to queue?           [count: ___]
+□ ASSUMPTIONS_DECLARED logged?                 [count: ___]
+□ EVR sequence respected?                      [Y/N — EXTRACT→VERIFY→RENDER]
+□ Research queue executed by priority?         [Y/N]
+□ All P1 items addressed?                      [Y/N]
+□ Findings recorded with sources?              [Y/N]
+□ Findings tagged VERIFIED/ASSUMED?            [Y/N]
+□ Knowledge map updated?                       [Y/N]
+□ New unknowns captured?                       [Y/N]
+□ Counter-checks performed?                   [count: ___ (min per depth)]
 
 CHECKLIST_STATUS: PASS | FAIL
 IF FAIL: Fix before proceeding.
@@ -162,60 +153,39 @@ IF FAIL: Fix before proceeding.
 GATE_01 BINDING CHECK:
 
 □ Research queue executed by priority       — [PASS/FAIL] — CRITICAL
-□ Findings recorded with sources            — [PASS/FAIL] — CRITICAL
-□ Knowledge map updated                     — [PASS/FAIL] — REQUIRED
-□ Counter-checks on key findings            — [PASS/FAIL] — REQUIRED
-  (min: quick=1, standard=2, deep=3)
-□ Post-phase checklist PASSED               — [PASS/FAIL] — CRITICAL
+□ Findings recorded with sources           — [PASS/FAIL] — CRITICAL
+□ Knowledge map updated                    — [PASS/FAIL] — REQUIRED
+□ Counter-checks on key findings           — [PASS/FAIL] — REQUIRED
+□ Post-phase checklist PASSED              — [PASS/FAIL] — CRITICAL
 
 GATE_01 STATUS: OPEN | LOCKED
+
+IF LOCKED: Cannot proceed to Step 2. Fix failures.
 ```
 
 ---
 
-## Output: Research Summary
+## Decision Point
 
+**Iteration check:**
 ```
-╔═══════════════════════════════════════════════════════════════╗
-║  RESEARCH SUMMARY                                              ║
-╠═══════════════════════════════════════════════════════════════╣
-║                                                                ║
-║  Items Researched:      [count]                                ║
-║                                                                ║
-║  KEY LEARNINGS:                                                 ║
-║  • [learning 1] - impact: ___ - status: VERIFIED/ASSUMED       ║
-║  • [learning 2] - impact: ___ - status: VERIFIED/ASSUMED       ║
-║                                                                ║
-║  Verified (HIGH confidence):    [count]                        ║
-║  Partial (MED confidence):      [count]                        ║
-║  Unknown (cannot determine):    [count]                        ║
-║                                                                ║
-║  New Questions Discovered:      [count]                        ║
-║  Flagged for Expert:            [count]                        ║
-║  Counter-checks performed:      [count]                        ║
-║                                                                ║
-╚═══════════════════════════════════════════════════════════════╝
+□ Did research reveal NEW critical unknowns?
+  → YES AND iterations remaining: Add to queue, loop back to research
+  → YES BUT max loops reached: Proceed with gaps flagged
+
+□ Are critical P1 items still unresolved?
+  → YES: Either continue research OR proceed with ASSUMED status flagged
 ```
 
----
-
-## Iteration Tracking
-
-```
-ITERATION CHECK:
-Current iteration: [N] of max [quick:1 / standard:3 / deep:10]
-
-□ If max iterations reached AND critical unknowns remain:
-  → Proceed anyway, flag unknowns as TRUE UNCERTAINTY
-  → Or ABORT if unknowns are decision-critical
-```
+**MAX ITERATIONS BY DEPTH:**
+- quick: 1 (no loops)
+- standard: 3
+- deep: unlimited
 
 ---
 
 ## Transition
 
-- **If GATE_01 = OPEN and critical unknowns addressed** → Proceed to Step 2
-- **If more research needed AND iterations remaining** → Stay in Step 1
-- **If more research needed BUT max iterations reached** → Proceed with unknowns flagged
-- **If framing changed** → Return to Step 0
-- **If research reveals decision should not be made** → ABORT (return to Step 0)
+- **If GATE_01 = OPEN and no new critical unknowns** → Proceed to Step 2
+- **If new unknowns discovered AND iterations remaining** → Stay in Step 1
+- **If max iterations reached** → Proceed to Step 2 with gaps flagged in process_log.yaml

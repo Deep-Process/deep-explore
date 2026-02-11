@@ -1,276 +1,336 @@
 # Step 03: Deepen
 
-## Purpose
+INPUTS (from workflow.md ARTIFACT SCHEMAS):
+- option_map.yaml (from Step 02)
 
-Understand consequences at multiple abstraction levels.
+OUTPUTS:
+- consequence_map.yaml
 
-**Time:** 20-40 min
-
-**Inputs:** Option Map from Step 2
-
-**Outputs:** Consequence Map with VERIFIED/ASSUMED status
-
-**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_03
+ENFORCEMENT: ASSUMPTIONS_DECLARED, EVR, COUNTER_CHECKS (min 1/2/3), POST-PHASE CHECKLIST, GATE_03
 
 ---
 
-## 03.0 ASSUMPTIONS_DECLARED (MANDATORY)
+## 03.0 ASSUMPTIONS_DECLARED
 
-**Execute BEFORE any consequence analysis.**
+| ID    | Assumption                      | Type         | Confidence | Falsification Criterion       |
+|-------|---------------------------------|--------------|------------|-------------------------------|
+| H-3xx | [causal relationships]          | DOMAIN       | HIGH/MED/LOW | [causation doesn't hold]     |
+| H-3xx | [consequence scope]             | INTERPRETIVE | [level]    | [scope wider/narrower]       |
+| H-3xx | [reversibility assumptions]     | CONTEXTUAL   | [level]    | [less reversible than assumed]|
 
-```
-ASSUMPTIONS_DECLARED for Phase 3:
-┌──────┬──────────────────────────────────────┬──────────────┬────────────┬──────────────────────────────┐
-│ ID   │ Assumption                           │ Type         │ Confidence │ Falsification Criterion      │
-├──────┼──────────────────────────────────────┼──────────────┼────────────┼──────────────────────────────┤
-│ H-3xx│ "[assumed causal relationships]"     │ DOMAIN       │ HIGH/MED/  │ "[causation doesn't hold]"   │
-│ H-3xx│ "[assumed consequence scope]"        │ INTERPRETIVE │ LOW        │ "[scope is wider/narrower]"  │
-│ H-3xx│ "[assumed reversibility]"            │ CONTEXTUAL   │            │ "[option is less reversible]" │
-└──────┴──────────────────────────────────────┴──────────────┴────────────┴──────────────────────────────┘
-```
+Minimum 1 assumption declared. Add rows as needed.
 
 ---
 
 ## 03.1 EXTRACT: Abstraction Navigation
 
-For key options, explore multiple levels — gather raw observations:
+PRECONDITION: None (first extraction in this phase)
 
+METHOD Abstraction Laddering (E002) (embedded):
+1. For each key option: identify WHY (higher purpose), WHAT (current level), HOW (implementation), DETAILS (specifics)
+2. Record observations at each level without interpretation
+3. Tag each observation with level marker: [WHY]/[WHAT]/[HOW]/[DETAILS]
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+abstraction_levels:
+  why: ["[observation - VERIFIED/ASSUMED]", ...]
+  what: ["[observation - VERIFIED/ASSUMED]", ...]
+  how: ["[observation - VERIFIED/ASSUMED]", ...]
+  details: ["[observation - VERIFIED/ASSUMED]", ...]
 ```
-OPTION: [name]
-
-ZOOM OUT (WHY) — raw observations:
-• "[why this option exists]"
-• "[higher goal it serves]"
-• "[whether it addresses the right problem]"
-
-CURRENT (WHAT) — raw observations:
-• "[what this option is]"
-• "[observable trade-offs]"
-
-DRILL DOWN (HOW) — raw observations:
-• "[how implementation would work]"
-• "[skills/resources needed]"
-• "[what could go wrong]"
-
-DRILL DEEPER (DETAILS) — raw observations:
-• "[specific tools/technologies]"
-• "[integrations needed]"
-• "[learning curve]"
-```
-
-## 03.2 EXTRACT: Apply Foundational Methods
-
-Load method: `data/method-procedures/E002_Counterfactual_Thinking.md`
-
-For key options, extract:
-- "What would NOT happen if this option didn't exist?"
-- "Which elements are NECESSARY vs NICE-TO-HAVE?"
-
-Load method: `data/method-procedures/E004_Boundary_Analysis.md`
-
-For key options, extract:
-- "Where does this option stop working?"
-- "What are the limits?"
-
-Load method: `data/method-procedures/E005_Causal_Models.md`
-
-Build causal model — extract raw relationships:
-- "What influences what?"
-- "Where are the leverage points?"
-
-```
-RAW CAUSAL RELATIONSHIPS:
-• [A] → influences → [B] — direction: [positive/negative]
-• [C] → depends on → [D] — type: [direct/indirect]
 
 [EXTRACT_COMPLETE]
-```
 
 ---
 
-## 03.3 VERIFY: Consequence Verification
+## 03.2 EXTRACT: Counterfactual Analysis
 
-Load method: `data/method-procedures/M011_Consequence_Analysis.md`
+PRECONDITION: [EXTRACT_COMPLETE from 03.1]
 
-**For each significant option — verify each consequence:**
+METHOD Counterfactual Thinking (E004) (embedded):
+1. For each option, ask: "What would NOT happen if this didn't exist?"
+2. Identify NECESSARY elements (cannot achieve goal without)
+3. Identify NICE-TO-HAVE elements (helpful but not essential)
+4. Tag each with STATUS: VERIFIED | ASSUMED
 
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+counterfactuals:
+  - would_not_happen: "[outcome - VERIFIED/ASSUMED]"
+    necessity_level: NECESSARY | NICE_TO_HAVE
 ```
-CONSEQUENCE VERIFICATION LOG:
 
-OPTION: [description]
+[EXTRACT_COMPLETE]
 
-IMMEDIATE CONSEQUENCES:
-┌────┬──────────────────┬──────────┬──────────────────────────────┐
-│ #  │ Consequence      │ Status   │ Evidence / Reason            │
-├────┼──────────────────┼──────────┼──────────────────────────────┤
-│ 1  │ Gain: [what]     │ VERIFIED │ Source: [evidence]           │
-│ 2  │ Cost: [what]     │ ASSUMED  │ Reason not verified: [why]   │
-│ 3  │ Risk: [what]     │ VERIFIED │ Source: [evidence]           │
-└────┴──────────────────┴──────────┴──────────────────────────────┘
+---
 
-DOWNSTREAM CONSEQUENCES:
-┌────┬──────────────────┬──────────┬──────────────────────────────┐
-│ #  │ Consequence      │ Status   │ Evidence / Reason            │
-├────┼──────────────────┼──────────┼──────────────────────────────┤
-│ 4  │ Opens: [what]    │ ASSUMED  │ Reason: [why not verified]   │
-│ 5  │ Closes: [what]   │ VERIFIED │ Source: [evidence]           │
-│ 6  │ Requires: [what] │ VERIFIED │ Source: [evidence]           │
-└────┴──────────────────┴──────────┴──────────────────────────────┘
+## 03.3 EXTRACT: Boundary Analysis
 
-ENFORCEMENT: Every consequence MUST have status tag.
-  Untagged consequence = UNTAGGED_CLAIM → HALT → tag it.
+PRECONDITION: [EXTRACT_COMPLETE from 03.2]
 
-VERIFICATION REQUIREMENT:
-  Critical ASSUMED consequences → flag for Step 1 return or accept as risk.
+METHOD Boundary Analysis (E005) (embedded):
+1. For each option: identify where it stops working (edge cases, limits)
+2. Document boundary conditions
+3. Assess boundary type: HARD (cannot cross) | SOFT (costly to cross)
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+boundaries:
+  - boundary: "[description - VERIFIED/ASSUMED]"
+    type: HARD | SOFT
+    condition: "[when reached]"
+```
+
+[EXTRACT_COMPLETE]
+
+---
+
+## 03.4 EXTRACT: Causal Relationships
+
+PRECONDITION: [EXTRACT_COMPLETE from 03.3]
+
+METHOD Causal Models (M011) (embedded):
+1. Identify what influences what (A → B relationships)
+2. Mark direction: positive (A increases → B increases) | negative (A increases → B decreases)
+3. Mark dependency type: direct | indirect
+4. Identify leverage points (high impact interventions)
+5. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+causal_relationships:
+  - from: "[element A]"
+    to: "[element B]"
+    direction: positive | negative
+    type: direct | indirect
+    status: VERIFIED | ASSUMED
+leverage_points: ["[point - VERIFIED/ASSUMED]", ...]
+```
+
+[EXTRACT_COMPLETE]
+
+---
+
+## 03.5 VERIFY: Consequence Verification
+
+PRECONDITION: [EXTRACT_COMPLETE from 03.4]
+
+METHOD Consequence Analysis (M012) (embedded):
+1. For each option: enumerate immediate consequences (gains, costs, risks)
+2. Enumerate downstream consequences (opens, closes, requires)
+3. Verify each with evidence or mark ASSUMED with reason
+4. Calculate verification_ratio = verified/(verified+assumed)
+5. Tag EVERY consequence with STATUS: VERIFIED | ASSUMED
+
+VERIFICATION:
+1. Check each consequence has status tag (UNTAGGED = HALT)
+2. Verify sources for VERIFIED consequences
+3. Document reason for ASSUMED consequences
+
+★ KEY_CLAIM: "Each verified consequence is genuinely verified (not rubber-stamped)"
+
+COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):
+```
+CC-1:
+  claim: "[verified consequence X]"
+  disproof: "[what would show this consequence doesn't follow]"
+  search: "[alternative causal path checked]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [none | downgrade to ASSUMED | remove]
+
+CC-2:
+  claim: "[verified consequence Y]"
+  disproof: "[what would show this is incorrect]"
+  search: "[edge case or exception checked]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [none | downgrade to ASSUMED | remove]
+
+CC-3 (if deep):
+  claim: "[verified consequence Z]"
+  disproof: "[what would invalidate this]"
+  search: "[contradicting evidence sought]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [none | downgrade to ASSUMED | remove]
+```
 
 [VERIFY_COMPLETE]
-```
-
-**★ KEY_CLAIM: Each verified consequence is genuinely verified (not rubber-stamped).**
-
-**COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):**
-```
-COUNTER-CHECK #N:
-  claim: "[verified consequence]"
-  disproof: "[what would show this consequence doesn't follow]"
-  search_attempt: "[alternative causal path, edge case, exception]"
-  result: CONFIRMED | WEAKENED | REFUTED
-  action: [none | downgrade to ASSUMED | remove consequence]
-```
 
 ---
 
-## 03.4 VERIFY: Reversibility Check
+## 03.6 VERIFY: Reversibility Check
 
-Load method: `data/method-procedures/M012_Reversibility_Check.md`
+PRECONDITION: [VERIFY_COMPLETE from 03.5]
 
+METHOD Reversibility Check (M013) (embedded):
+1. For each option: assess how easily it can be undone
+2. Identify point of no return (when becomes hard/impossible to reverse)
+3. Classify: HIGH (minimal cost) | MEDIUM (significant cost) | LOW (very difficult) | IRREVERSIBLE
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+VERIFICATION:
+1. Check point of no return is specific (not vague "later")
+2. Verify reversibility classification has supporting evidence
+3. Confirm irreversibility claims are accurate (not exaggerated)
+
+OUTPUT FORMAT (in consequence_map.yaml):
+```yaml
+option_id: "[reference]"
+reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+point_of_no_return: "[specific trigger - VERIFIED/ASSUMED]"
+reversal_cost: "[description - VERIFIED/ASSUMED]"
 ```
-REVERSIBILITY ASSESSMENT:
-┌──────────────┬──────────────┬────────────────────────────────┐
-│ Option       │ Reversibility│ Point of No Return             │
-├──────────────┼──────────────┼────────────────────────────────┤
-│ [option A]   │ HIGH/MED/LOW/│ [when it becomes hard to undo] │
-│              │ IRREVERSIBLE │                                │
-└──────────────┴──────────────┴────────────────────────────────┘
 
-HIGH = Can change with minimal cost
-MEDIUM = Can change with significant cost
-LOW = Very difficult to change
-IRREVERSIBLE = Cannot undo
-```
-
-## 03.5 VERIFY: Dependency Analysis
-
-Load method: `data/method-procedures/M013_Dependency_Analysis.md`
-
-```
-DECISION DEPENDENCIES:
-├── [Decision A] blocks [Decision B]
-├── [Decision C] requires [Decision A] first
-└── [Decision D] can be made independently
-
-EXTERNAL DEPENDENCIES:
-• [dependency] - controlled by: [who] - status: [VERIFIED/ASSUMED]
-```
+[VERIFY_COMPLETE]
 
 ---
 
-## 03.6 RENDER: Consequence Map
+## 03.7 VERIFY: Dependency Analysis
 
-**Only after all verification complete.**
+PRECONDITION: [VERIFY_COMPLETE from 03.6]
 
+METHOD Dependency Mapping (embedded):
+1. Identify decision dependencies (A blocks B, C requires A first)
+2. Identify external dependencies (controlled by others)
+3. Verify dependency relationships (not assumed)
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+VERIFICATION:
+1. Check dependencies are real (not hypothetical)
+2. Verify external dependency status is current
+3. Confirm dependency direction is correct
+
+OUTPUT FORMAT (in consequence_map.yaml):
+```yaml
+decision_dependencies:
+  - decision_a: "[name]"
+    blocks: ["[decision B]", ...]
+    requires: ["[decision C must happen first]", ...]
+external_dependencies:
+  - dependency: "[what]"
+    controlled_by: "[who/what]"
+    status: VERIFIED | ASSUMED
+    current_state: "[description]"
 ```
-╔═══════════════════════════════════════════════════════════════╗
-║  CONSEQUENCE MAP                                               ║
-╠═══════════════════════════════════════════════════════════════╣
-║                                                                ║
-║  OPTION: [name]                                                ║
-║  ├── ✓ [verified consequence] — source: [ref]                 ║
-║  ├── ? [assumed consequence] — confidence: [level]             ║
-║  ├── ✗ [risk] — probability: [est]                             ║
-║  └── Reversibility: [level]                                    ║
-║                                                                ║
-║  VERIFICATION RATIO: [verified/(verified+assumed)] = [N]%      ║
-║                                                                ║
-╚═══════════════════════════════════════════════════════════════╝
+
+[VERIFY_COMPLETE]
+
+---
+
+## 03.8 RENDER: Consequence Map
+
+PRECONDITION: [VERIFY_COMPLETE from 03.7]
+
+OUTPUT (consequence_map.yaml):
+```yaml
+consequences:
+  - option_id: "[reference]"
+    immediate:
+      gains: ["[gain - VERIFIED/ASSUMED]", ...]
+      costs: ["[cost - VERIFIED/ASSUMED]", ...]
+      risks: ["[risk - VERIFIED/ASSUMED]", ...]
+    downstream:
+      opens: ["[opportunity - VERIFIED/ASSUMED]", ...]
+      closes: ["[foreclosed path - VERIFIED/ASSUMED]", ...]
+      requires: ["[prerequisite - VERIFIED/ASSUMED]", ...]
+    reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+    point_of_no_return: "[trigger - VERIFIED/ASSUMED]"
+    dependencies:
+      decision: ["[what must be decided first]", ...]
+      external: ["[dependency - VERIFIED/ASSUMED]", ...]
+    verification_ratio: "[verified/(verified+assumed)]"
+
+abstraction_levels:
+  - option_id: "[reference]"
+    why: ["[observation - VERIFIED/ASSUMED]", ...]
+    what: ["[observation - VERIFIED/ASSUMED]", ...]
+    how: ["[observation - VERIFIED/ASSUMED]", ...]
+    details: ["[observation - VERIFIED/ASSUMED]", ...]
+
+causal_relationships:
+  - option_id: "[reference]"
+    relationships:
+      - from: "[A]"
+        to: "[B]"
+        direction: positive | negative
+        type: direct | indirect
+        status: VERIFIED | ASSUMED
+    leverage_points: ["[point - VERIFIED/ASSUMED]", ...]
+
+boundaries:
+  - option_id: "[reference]"
+    boundaries:
+      - boundary: "[description - VERIFIED/ASSUMED]"
+        type: HARD | SOFT
+        condition: "[when reached]"
+
+counterfactuals:
+  - option_id: "[reference]"
+    would_not_happen: ["[outcome - VERIFIED/ASSUMED]", ...]
+    necessary_elements: ["[element - VERIFIED/ASSUMED]", ...]
+    nice_to_have: ["[element - VERIFIED/ASSUMED]", ...]
+```
 
 [RENDER_COMPLETE]
-```
 
 ---
 
-## POST-PHASE CHECKLIST (MANDATORY)
+## 03.9 POST-PHASE CHECKLIST
 
-```
-PHASE_03 COMPLETION CHECKLIST:
-
-□ ASSUMPTIONS_DECLARED logged?             [count: ___]
-□ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
-□ Abstraction levels explored?             [Y/N — WHY/WHAT/HOW/DETAILS]
-□ Counterfactual thinking applied?         [Y/N]
-□ Boundary analysis applied?               [Y/N]
-□ Causal model built?                      [Y/N]
-□ Consequences analyzed per option?        [count: ___]
-□ Each consequence tagged VERIFIED/ASSUMED?[Y/N — untagged count: ___]
-□ Reversibility assessed per option?       [Y/N]
-□ Dependencies mapped?                     [Y/N]
-□ Counter-checks performed?               [count: ___ (min: ___)]
-□ Verification ratio calculated?           [Y/N — ratio: ___%]
+□ All outputs produced? [Y/N — list missing if N]
+□ ASSUMPTIONS_DECLARED logged? [count ≥ 1]
+□ EVR sequence respected? [Y/N — EXTRACT→VERIFY→RENDER]
+□ Counter-checks performed? [count ≥ min per depth]
+□ Key claims marked ★? [count ≥ 1]
+□ ASSUMED items flagged? [Y/N]
+□ Artifacts schema-compliant? [Y/N]
+□ Each consequence tagged VERIFIED/ASSUMED? [Y/N — untagged count: 0]
+□ Reversibility assessed per option? [Y/N]
+□ Dependencies mapped? [Y/N]
+□ Verification ratio calculated? [Y/N — value: ___]
 
 CHECKLIST_STATUS: PASS | FAIL
-IF FAIL: Fix before proceeding.
-```
+
+IF FAIL: Fix issues before proceeding.
 
 ---
 
-## GATE_03: DEEPEN EXIT
+## 03.10 GATE_03 CONDITIONS
 
-```
-GATE_03 BINDING CHECK:
+CRITICAL (must pass):
+□ Consequences analyzed per option — IF FAIL → SCOPE_REDUCTION_DECLARATION required
+□ Each consequence tagged VERIFIED/ASSUMED — IF FAIL → go back and tag (BLOCKER)
+□ Post-phase checklist PASSED — IF FAIL → fix issues
 
-□ Consequences analyzed per option          — [PASS/FAIL] — CRITICAL
-□ Each consequence tagged VERIFIED/ASSUMED  — [PASS/FAIL] — CRITICAL
-□ Reversibility assessed                    — [PASS/FAIL] — REQUIRED
-□ Dependencies mapped                       — [PASS/FAIL] — REQUIRED
-□ Counter-checks on key consequences        — [PASS/FAIL] — REQUIRED
-□ Post-phase checklist PASSED               — [PASS/FAIL] — CRITICAL
+REQUIRED (should pass):
+□ Reversibility assessed — IF FAIL → log + flag in process_log
+□ Dependencies mapped — IF FAIL → log + flag in process_log
+□ Counter-checks ≥ minimum — IF FAIL → perform additional checks
 
-GATE_03 STATUS: OPEN | LOCKED
-```
+GATE_STATUS: OPEN | LOCKED
 
----
-
-## Feedback Loop Check
-
-```
-□ Did deepening reveal consequences we can't assess?
-  → YES: Return to Step 1 (if iterations remaining)
-
-□ Are critical consequences still ASSUMED?
-  → YES: Return to Step 1 to verify (if iterations remaining)
-
-□ Did we discover the problem is different?
-  → YES: Return to Step 0
-
-□ Are ALL options' consequences unacceptable?
-  → YES: Consider ABORT
-```
-
-## Iteration Tracking
-
-```
-VERIFICATION LOOP COUNT: [N]
-
-□ If returning to Step 1 more than [quick:1 / standard:2 / deep:3] times:
-  → STOP: Proceed with ASSUMED consequences marked as risks
-```
+IF LOCKED: Cannot proceed. Fix issues or execute SCOPE_REDUCTION protocol.
 
 ---
 
-## Transition
+## 03.11 TRANSITION
 
-- **If GATE_03 = OPEN and consequences verified** → Proceed to Step 4
-- **If verification needed AND iterations remaining** → Return to Step 1
-- **If verification needed BUT max loops reached** → Proceed with assumptions flagged
-- **If reframe needed** → Return to Step 0
-- **If all consequences unacceptable** → Consider ABORT
+IF GATE_03 = OPEN:
+  → Load next step file: steps/step-04-challenge.md
+  → Continue to Phase 4
+
+IF GATE_03 = LOCKED AND consequences unverifiable:
+  → Consider return to Step 1 (if iterations remaining)
+  → OR proceed with ASSUMED flags (if max loops reached)
+
+IF reframe needed (problem redefined):
+  → Return to Step 0 (rare — requires user agreement)
+
+IF all options' consequences unacceptable:
+  → Consider ABORT (document in process_log)

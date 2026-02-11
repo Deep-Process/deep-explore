@@ -1,407 +1,447 @@
-# Step 04: Challenge (Adversarial)
+# Step 04: Challenge
 
-## Purpose
+INPUTS (from workflow.md ARTIFACT SCHEMAS):
+- option_map.yaml (from Step 02)
+- consequence_map.yaml (from Step 03)
+- assumptions_declared (from all previous phases)
 
-Stress-test the exploration for blind spots and weak thinking.
+OUTPUTS:
+- challenge_results.yaml
 
-**Time:** 15-20 min
-
-**Inputs:** Option Map, Consequence Map from Steps 2-3
-
-**Outputs:** Challenged map with strengthened/weakened items
-
-**Enforcement layers active:** ASSUMPTIONS_DECLARED, EVR, COUNTER-CHECKS, POST-PHASE CHECKLIST, GATE_04
+ENFORCEMENT: ASSUMPTIONS_DECLARED, EVR, COUNTER_CHECKS (min 1/2/3), POST-PHASE CHECKLIST, GATE_04
 
 ---
 
-## 04.0 ASSUMPTIONS_DECLARED (MANDATORY)
+## 04.0 ASSUMPTIONS_DECLARED
 
-**Execute BEFORE any challenge activity.**
+| ID    | Assumption                        | Type         | Confidence | Falsification Criterion    |
+|-------|-----------------------------------|--------------|------------|----------------------------|
+| H-4xx | [challenge completeness]          | INTERPRETIVE | HIGH/MED/LOW | [angle missed]            |
+| H-4xx | [bias awareness]                  | CONTEXTUAL   | [level]    | [blind spot found]        |
+| H-4xx | [failure mode assumptions]        | DOMAIN       | [level]    | [different failure mode]  |
 
-```
-ASSUMPTIONS_DECLARED for Phase 4:
-┌──────┬──────────────────────────────────────┬──────────────┬────────────┬──────────────────────────────┐
-│ ID   │ Assumption                           │ Type         │ Confidence │ Falsification Criterion      │
-├──────┼──────────────────────────────────────┼──────────────┼────────────┼──────────────────────────────┤
-│ H-4xx│ "[assumed completeness of challenge]"│ INTERPRETIVE │ HIGH/MED/  │ "[challenge missed angle]"   │
-│ H-4xx│ "[assumed bias awareness]"           │ CONTEXTUAL   │ LOW        │ "[blind spot found]"         │
-│ H-4xx│ "[assumed failure modes]"            │ DOMAIN       │            │ "[different failure mode]"   │
-└──────┴──────────────────────────────────────┴──────────────┴────────────┴──────────────────────────────┘
-```
+Minimum 1 assumption declared. Add rows as needed.
 
 ---
 
 ## 04.1 EXTRACT: Falsification Attempts
 
-Load method: `data/method-procedures/E006_Falsification.md`
+PRECONDITION: None (first extraction in this phase)
 
-For each key belief/assumption — extract raw challenge data:
+METHOD Falsification (E006) (embedded):
+1. For each key belief/assumption: identify what would show it is FALSE
+2. Search for contradicting evidence
+3. Document evidence found (or absence)
+4. Record contradicting sources
+5. Tag with STATUS: VERIFIED | ASSUMED
 
+OUTPUT FORMAT:
+```yaml
+belief_id: "[reference]"
+belief: "[statement]"
+disproof_criteria: "[what would show this is false - VERIFIED/ASSUMED]"
+evidence_searched: "[what was looked for]"
+evidence_found: "[what was found or 'none']"
+contradicting_sources: ["[source]", ...]
+status: VERIFIED | ASSUMED
 ```
-BELIEF: "[statement]"
 
-RAW FALSIFICATION DATA:
-• What would show this is FALSE? [description]
-• Evidence searched: [what was looked for]
-• Evidence found: [what was found]
-• Contradicting sources: [list]
+[EXTRACT_COMPLETE]
 
-[EXTRACT_COMPLETE for falsification]
-```
+---
 
 ## 04.2 EXTRACT: Premortem
 
-Load method: `data/method-procedures/M021_Premortem.md`
+PRECONDITION: [EXTRACT_COMPLETE from 04.1]
 
-**Note:** M021 uses the UNIFIED FAILURE TAXONOMY (shared with E008 from Step 0).
+METHOD Premortem (M021) (embedded):
+1. For top 2-3 options: imagine "It's 12 months later. We chose this. It failed badly."
+2. List causes of failure
+3. Classify each by type: STRUCTURAL (hard limits) | OPERATIONAL (constraints) | EXTERNAL (outside control) | COGNITIVE (assumptions)
+4. Assess likelihood: HIGH | MEDIUM | LOW
+5. Tag with STATUS: VERIFIED | ASSUMED
 
-For top 2-3 options, imagine failure:
-
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+failure_scenario: "[description of failure]"
+causes:
+  - cause: "[failure reason - VERIFIED/ASSUMED]"
+    type: STRUCTURAL | OPERATIONAL | EXTERNAL | COGNITIVE
+    likelihood: HIGH | MEDIUM | LOW
+    mitigation: "[how to prevent - VERIFIED/ASSUMED]"
 ```
-OPTION: [name]
 
-SCENARIO: "It's 12 months later. We chose this. It failed badly."
+TYPE KEY:
+- STRUCTURAL = Hard limits → Contingency plan or reject option
+- OPERATIONAL = Constraints → Mitigate before proceeding
+- EXTERNAL = Outside control → Monitor + contingency plan
+- COGNITIVE = Assumptions → Verify or dismiss
 
-RAW FAILURE CAUSES:
-1. [cause] — initial type classification: [STRUCTURAL/OPERATIONAL/EXTERNAL/COGNITIVE]
-2. [cause] — initial type classification: [type]
-3. [cause] — initial type classification: [type]
+[EXTRACT_COMPLETE]
 
-UNIFIED TYPE KEY (same as E008):
-• STRUCTURAL = Hard limits → Contingency or reject option
-• OPERATIONAL = Constraints → Mitigate before proceeding
-• EXTERNAL = Outside control → Monitor + contingency plan
-• COGNITIVE = Assumptions → Verify or dismiss
-
-[EXTRACT_COMPLETE for premortem]
-```
+---
 
 ## 04.3 EXTRACT: Black Swan Hunt
 
-Load method: `data/method-procedures/M022_Black_Swan_Hunt.md`
+PRECONDITION: [EXTRACT_COMPLETE from 04.2]
 
+METHOD Black Swan Hunt (M022) (embedded):
+1. Identify positive black swans (low probability, high upside)
+2. Identify negative black swans (low probability, catastrophic downside)
+3. Document early warning indicators
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+black_swans:
+  positive:
+    - event: "[description - VERIFIED/ASSUMED]"
+      impact: "[what it would enable]"
+      indicator: "[early warning sign]"
+  negative:
+    - event: "[description - VERIFIED/ASSUMED]"
+      impact: "[what it would destroy]"
+      indicator: "[early warning sign]"
 ```
-RAW BLACK SWAN INVENTORY:
 
-POSITIVE (upside):
-• [event] - would enable: [what]
+[EXTRACT_COMPLETE]
 
-NEGATIVE (downside):
-• [event] - would destroy: [what]
-
-[EXTRACT_COMPLETE for black swans]
-```
+---
 
 ## 04.4 EXTRACT: Assumption Stress Test
 
-Load method: `data/method-procedures/M023_Assumption_Stress_Test.md`
+PRECONDITION: [EXTRACT_COMPLETE from 04.3]
 
+METHOD Assumption Stress Test (M023) (embedded):
+1. For each key assumption: identify what would disprove it
+2. Identify who would disagree (stakeholders with different view)
+3. Assess impact if 50% wrong
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+assumption_id: "[reference]"
+assumption: "[statement]"
+disproof: "[what would show this is wrong - VERIFIED/ASSUMED]"
+disagreeing_stakeholders: ["[who would disagree]", ...]
+impact_if_50_percent_wrong: "[description - VERIFIED/ASSUMED]"
+status: VERIFIED | ASSUMED
 ```
-For each key assumption:
 
-ASSUMPTION: "[statement]"
-RAW STRESS DATA:
-• What would disprove this? [description]
-• Who would disagree? [stakeholder]
-• What if 50% wrong? [impact]
-
-[EXTRACT_COMPLETE for stress test]
-```
+[EXTRACT_COMPLETE]
 
 ---
 
 ## 04.5 VERIFY: Challenge Results
 
+PRECONDITION: [EXTRACT_COMPLETE from 04.4]
+
+VERIFICATION:
+1. Check falsification results are genuine (not rubber-stamped)
+2. Verify premortem causes are specific (not generic)
+3. Confirm assumption stress tests are thorough (not superficial)
+4. Validate survivability assessments
+
+★ KEY_CLAIM: "Challenge was genuine — not a rubber stamp"
+
+COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):
 ```
-CHALLENGE VERIFICATION LOG:
-
-FALSIFICATION RESULTS:
-┌────┬──────────────────────────┬──────────────┬──────────────────────────┐
-│ #  │ Belief                   │ Result       │ Evidence                 │
-├────┼──────────────────────────┼──────────────┼──────────────────────────┤
-│ 1  │ "[belief]"               │ FALSIFIED    │ evidence: [what found]   │
-│    │                          │              │ → REMOVE or MODIFY       │
-│ 2  │ "[belief]"               │ SURVIVED     │ attempts: [what tried]   │
-│    │                          │              │ → STRENGTHEN confidence  │
-│ 3  │ "[belief]"               │ UNTESTABLE   │ reason: [why]            │
-│    │                          │              │ → FLAG as assumption     │
-└────┴──────────────────────────┴──────────────┴──────────────────────────┘
-
-PREMORTEM RESULTS:
-┌────┬──────────────────────┬──────────┬──────────────┬──────────────────┐
-│ #  │ Cause                │ Type     │ Preventable? │ Action           │
-├────┼──────────────────────┼──────────┼──────────────┼──────────────────┤
-│ 1  │ [cause]              │ STRUCT.  │ NO           │ Contingency      │
-│ 2  │ [cause]              │ OPER.    │ YES          │ Mitigate         │
-│ 3  │ [cause]              │ EXTERNAL │ PARTIAL      │ Monitor          │
-│ 4  │ [cause]              │ COGN.    │ YES          │ Verify first     │
-└────┴──────────────────────┴──────────┴──────────────┴──────────────────┘
-
-SURVIVABILITY per option:
-• Worst case: [description]
-• Recoverable? [Y/N]
-• Reversibility: [HIGH/MED/LOW/IRREVERSIBLE]
-• VERDICT: [PROCEED / PROCEED WITH CAUTION / RECONSIDER / REJECT]
-
-ASSUMPTION STRESS RESULTS:
-┌────┬──────────────────────────┬──────────┬──────────────────────────┐
-│ #  │ Assumption               │ Result   │ Impact                   │
-├────┼──────────────────────────┼──────────┼──────────────────────────┤
-│ 1  │ "[assumption]"           │ HOLDS    │ survives challenge       │
-│ 2  │ "[assumption]"           │ WEAKENED │ reduce confidence to MED │
-│ 3  │ "[assumption]"           │ BROKEN   │ update map — [how]       │
-└────┴──────────────────────────┴──────────┴──────────────────────────┘
-
-[VERIFY_COMPLETE]
-```
-
-**★ KEY_CLAIM: "Challenge was genuine — not a rubber stamp."**
-
-**COUNTER-CHECKS (minimum per depth: quick=1, standard=2, deep=3):**
-```
-COUNTER-CHECK #N:
+CC-1:
   claim: "The challenge phase was thorough — no major angle was missed"
   disproof: "A critical failure mode, bias, or assumption was not examined"
-  search_attempt: "[check: regulatory risk, team dynamics, market shift,
-                    technology obsolescence, second-order effects]"
+  search: "[check: regulatory risk, team dynamics, market shift, technology obsolescence, second-order effects]"
   result: CONFIRMED | WEAKENED | REFUTED
   action: [if WEAKENED: add missing challenge area]
+
+CC-2:
+  claim: "[premortem for option X is comprehensive]"
+  disproof: "A likely failure mode was overlooked"
+  search: "[check failure taxonomy: STRUCTURAL/OPERATIONAL/EXTERNAL/COGNITIVE all considered]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [if WEAKENED: add missing failure modes]
+
+CC-3 (if deep):
+  claim: "[falsification tests were genuine]"
+  disproof: "Contradicting evidence was available but not found"
+  search: "[attempt to find contradicting evidence that should have been discovered]"
+  result: CONFIRMED | WEAKENED | REFUTED
+  action: [if WEAKENED: add overlooked contradictions]
 ```
+
+OUTPUT FORMAT (challenge_results.yaml):
+```yaml
+falsification_tests:
+  - belief_id: "[ref]"
+    belief: "[claim]"
+    result: FALSIFIED | SURVIVED | UNTESTABLE
+    evidence: "[what found]"
+    action: REMOVE | STRENGTHEN | FLAG_ASSUMPTION
+
+premortem:
+  - option_id: "[ref]"
+    failure_scenario: "[description]"
+    causes:
+      - cause: "[reason]"
+        type: STRUCTURAL | OPERATIONAL | EXTERNAL | COGNITIVE
+        likelihood: HIGH | MEDIUM | LOW
+        preventable: YES | NO | PARTIAL
+        mitigation: "[action]"
+    survivability:
+      worst_case: "[description]"
+      recoverable: YES | NO
+      reversibility: HIGH | MEDIUM | LOW | IRREVERSIBLE
+      verdict: PROCEED | PROCEED_WITH_CAUTION | RECONSIDER | REJECT
+
+assumption_stress_results:
+  - assumption_id: "[ref]"
+    result: HOLDS | WEAKENED | BROKEN
+    impact: "[description]"
+    action: "[none | reduce confidence | update map]"
+
+black_swans:
+  - event: "[description]"
+    type: POSITIVE | NEGATIVE
+    probability: VERY_LOW | LOW
+    impact: CATASTROPHIC | SEVERE | MODERATE | BENEFICIAL
+    indicator: "[early warning]"
+```
+
+[VERIFY_COMPLETE]
 
 ---
 
-## 04.6 VERIFY: Bias Check
+## 04.6 VERIFY: Bias Check (standard/deep only)
 
-Run through comprehensive checklist. For each bias detected, apply remediation.
+PRECONDITION: [VERIFY_COMPLETE from 04.5]
 
+For each bias category, detect presence and apply remediation:
+
+BIAS CATEGORIES:
+1. CONFIRMATION BIAS — Did I seek contradicting evidence?
+   Remediation: Force-search 3 sources that disagree
+2. AVAILABILITY BIAS — Am I overweighting recent/vivid examples?
+   Remediation: Check base rates, find statistical evidence
+3. ANCHORING — Did first number/option overly influence me?
+   Remediation: Generate estimate BEFORE seeing anchors
+4. FRAMING EFFECT — Would I decide differently if framed as loss vs gain?
+   Remediation: Reframe each option in opposite terms
+5. SUNK COST FALLACY — Am I continuing because of past investment?
+   Remediation: Imagine starting fresh today — same choice?
+6. STATUS QUO BIAS — Am I favoring 'do nothing' without justification?
+   Remediation: List costs of NOT changing
+7. LOSS AVERSION — Am I overweighting losses vs gains?
+   Remediation: Calculate expected value, not worst case
+8. PLANNING FALLACY — Am I underestimating time/cost/difficulty?
+   Remediation: Use reference class forecasting
+9. OPTIMISM BIAS — Am I assuming things go better than typical?
+   Remediation: "What if I'm wrong?" and plan for it
+10. OVERCONFIDENCE — How certain am I, and is that justified?
+    Remediation: Track past predictions, calibrate
+11. AUTHORITY BIAS — Am I believing X because expert said so?
+    Remediation: Check expert track record, seek opposing experts
+12. GROUPTHINK — Is everyone agreeing too easily?
+    Remediation: Assign devil's advocate, seek outside opinion
+13. SURVIVORSHIP BIAS — Am I only seeing successes, not failures?
+    Remediation: Actively search for failure cases
+
+OUTPUT FORMAT (in challenge_results.yaml):
+```yaml
+bias_check:
+  - bias_name: "[name]"
+    present: YES | NO | UNCLEAR
+    evidence: "[why detected]"
+    impact: NONE | MINOR | SIGNIFICANT | CRITICAL
+    remediation_applied: "[what was done]"
+
+total_biases_checked: [count]
+significant_critical_count: [count requiring map update]
 ```
-┌──────────────────────────────────────────────────────────────────────────┐
-│  COGNITIVE BIAS CHECKLIST                                                 │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                           │
-│  INFORMATION PROCESSING BIASES                                            │
-│  □ CONFIRMATION BIAS                                                      │
-│    Detection: "Did I seek out contradicting evidence?"                    │
-│    Remediation: Force-search for 3 sources that disagree                 │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ AVAILABILITY BIAS                                                      │
-│    Detection: "Am I overweighting recent or vivid examples?"             │
-│    Remediation: Check base rates, find statistical evidence              │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ ANCHORING                                                              │
-│    Detection: "Did the first number/option overly influence me?"         │
-│    Remediation: Generate estimate BEFORE seeing anchors                  │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ FRAMING EFFECT                                                         │
-│    Detection: "Would I decide differently if framed as loss vs gain?"    │
-│    Remediation: Reframe each option in opposite terms                    │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  DECISION-MAKING BIASES                                                   │
-│  □ SUNK COST FALLACY                                                      │
-│    Detection: "Am I continuing because of past investment?"              │
-│    Remediation: Imagine starting fresh today — same choice?              │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ STATUS QUO BIAS                                                        │
-│    Detection: "Am I favoring 'do nothing' without justification?"        │
-│    Remediation: List costs of NOT changing                               │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ LOSS AVERSION                                                          │
-│    Detection: "Am I overweighting potential losses vs gains?"            │
-│    Remediation: Calculate expected value, not worst case                 │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ PLANNING FALLACY                                                       │
-│    Detection: "Am I underestimating time/cost/difficulty?"               │
-│    Remediation: Use reference class forecasting                          │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  SOCIAL & EMOTIONAL BIASES                                                │
-│  □ OPTIMISM BIAS                                                          │
-│    Detection: "Am I assuming things will go better than typical?"        │
-│    Remediation: "What if I'm wrong?" and plan for it                     │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ OVERCONFIDENCE                                                         │
-│    Detection: "How certain am I, and is that justified?"                 │
-│    Remediation: Track past predictions, calibrate                        │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ AUTHORITY BIAS                                                         │
-│    Detection: "Am I believing X because expert said so?"                 │
-│    Remediation: Check expert's track record, seek opposing experts       │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ GROUPTHINK                                                             │
-│    Detection: "Is everyone agreeing too easily?"                         │
-│    Remediation: Assign devil's advocate, seek outside opinion            │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-│  □ SURVIVORSHIP BIAS                                                      │
-│    Detection: "Am I only seeing successes, not failures?"                │
-│    Remediation: Actively search for failure cases                        │
-│    Impact on map: [ ] None [ ] Minor [ ] Significant [ ] Critical        │
-│                                                                           │
-└──────────────────────────────────────────────────────────────────────────┘
 
-BIAS CHECK SUMMARY:
-┌────────────────────────┬──────────┬────────────────────────────────────┐
-│ Bias Detected          │ Impact   │ Remediation Applied                │
-├────────────────────────┼──────────┼────────────────────────────────────┤
-│                        │          │                                    │
-└────────────────────────┴──────────┴────────────────────────────────────┘
-TOTAL BIASES CHECKED: [count]
-SIGNIFICANT/CRITICAL: [count] → Must update map
-```
+[VERIFY_COMPLETE]
 
 ---
 
-## 04.7 Fear Resolution (when fear_analysis=on)
+## 04.7 FEAR RESOLUTION (conditional: only when fear_analysis=on)
 
-### Design Minimal Tests
+### 04.7a EXTRACT: Cognitive MVP Design
 
-Load method: `data/method-procedures/E010_Cognitive_MVP.md`
+PRECONDITION: [VERIFY_COMPLETE from 04.6] AND fear_analysis=on
 
-```
-FOR EACH UNRESOLVED FEAR:
+METHOD Cognitive MVP (E010) (embedded):
+1. For each unresolved fear: design smallest test to learn if fear is valid
+2. Define minimal action, effort level, learning outcomes
+3. Frame failure as DATA (not defeat)
+4. Tag with STATUS: VERIFIED | ASSUMED
 
-FEAR: "[what user is afraid of]"
-STATUS: [still uncertain after research]
-
-MINIMAL TEST:
-"What's the SMALLEST thing I can do to learn if this fear is valid?"
-
-PROBE DESIGN:
-• Action: [minimal action]
-• Effort: [LOW/MED/HIGH]
-• Learning if succeeds: ___
-• Learning if fails: ___
-
-→ Failure becomes DATA, not defeat
-```
-
-### Growth Assessment
-
-Load method: `data/method-procedures/E014_Growth_Test.md`
-
-```
-FOR EACH MAJOR OPTION:
-
-GROWTH TEST:
-┌────────────────────────────┬────────┬────────────────────┐
-│ Growth Type                │ Y/N    │ What specifically   │
-├────────────────────────────┼────────┼────────────────────┤
-│ New learning forced        │        │                     │
-│ New skill developed        │        │                     │
-│ New experience gained      │        │                     │
-│ Network/access expanded    │        │                     │
-│ Thinking changed           │        │                     │
-└────────────────────────────┴────────┴────────────────────┘
-
-VERDICT:
-[ ] HIGH GROWTH - worth doing even if "fails"
-[ ] GAMBLING - reconsider
-[ ] NEEDS REDESIGN - add learning component
+OUTPUT FORMAT:
+```yaml
+fear_id: "[reference]"
+fear: "[what user is afraid of]"
+minimal_test:
+  action: "[smallest thing to do - VERIFIED/ASSUMED]"
+  effort: LOW | MEDIUM | HIGH
+  learning_if_succeeds: "[what learned]"
+  learning_if_fails: "[what learned - failure = data]"
+status: VERIFIED | ASSUMED
 ```
 
-### Fear Map Resolution
+[EXTRACT_COMPLETE]
 
-```
-FEAR MAP UPDATE:
-┌────────────────────────────────┬────────────────────────────────┐
-│ Fear from Step 0               │ Resolution Status              │
-├────────────────────────────────┼────────────────────────────────┤
-│ [fear 1]                       │ RESOLVED/ADDRESSED/REMAINS     │
-│ [fear 2]                       │ RESOLVED/ADDRESSED/REMAINS     │
-└────────────────────────────────┴────────────────────────────────┘
+### 04.7b EXTRACT: Growth Assessment
 
-RESOLUTION KEY:
-• RESOLVED = Evidence shows fear was unfounded
-• ADDRESSED = Mitigation plan exists
-• REMAINS = True risk, accepted or pivoted
+PRECONDITION: [EXTRACT_COMPLETE from 04.7a]
+
+METHOD Growth Test (E014) (embedded):
+1. For each major option: assess growth dimensions
+2. Check: new learning, new skill, new experience, network expansion, thinking change
+3. Classify: HIGH_GROWTH (worth even if "fails") | GAMBLING (reconsider) | NEEDS_REDESIGN (add learning)
+4. Tag with STATUS: VERIFIED | ASSUMED
+
+OUTPUT FORMAT:
+```yaml
+option_id: "[reference]"
+growth_assessment:
+  new_learning_forced: YES | NO - "[what specifically - VERIFIED/ASSUMED]"
+  new_skill_developed: YES | NO - "[what specifically - VERIFIED/ASSUMED]"
+  new_experience_gained: YES | NO - "[what specifically - VERIFIED/ASSUMED]"
+  network_access_expanded: YES | NO - "[what specifically - VERIFIED/ASSUMED]"
+  thinking_changed: YES | NO - "[what specifically - VERIFIED/ASSUMED]"
+  verdict: HIGH_GROWTH | GAMBLING | NEEDS_REDESIGN
 ```
+
+[EXTRACT_COMPLETE]
+
+### 04.7c VERIFY: Fear Map Resolution
+
+PRECONDITION: [EXTRACT_COMPLETE from 04.7b]
+
+VERIFICATION:
+1. Match each original fear (from Step 0) with resolution status
+2. Classify: RESOLVED (evidence shows unfounded) | ADDRESSED (mitigation exists) | REMAINS (true risk, accepted or pivoted)
+3. Verify minimal tests are genuinely minimal (not complex)
+4. Confirm growth assessments are realistic
+
+OUTPUT FORMAT (in challenge_results.yaml):
+```yaml
+fear_resolution:
+  - fear_id: "[from Step 0]"
+    fear: "[original fear]"
+    resolution_status: RESOLVED | ADDRESSED | REMAINS
+    resolution_details: "[explanation]"
+    minimal_test: "[reference to test designed]"
+    growth_verdict: "[reference to growth assessment]"
+```
+
+[VERIFY_COMPLETE]
 
 ---
 
 ## 04.8 RENDER: Challenge Results
 
+PRECONDITION: [VERIFY_COMPLETE from all previous sections]
+
+OUTPUT (challenge_results.yaml — complete structure):
+```yaml
+falsification_tests:
+  - belief_id: "[ref]"
+    belief: "[claim]"
+    result: FALSIFIED | SURVIVED | UNTESTABLE
+    evidence: "[what found]"
+    action: REMOVE | STRENGTHEN | FLAG_ASSUMPTION
+
+premortem:
+  - option_id: "[ref]"
+    failure_scenario: "[description]"
+    causes: [...]
+    survivability: [...]
+
+assumption_stress_results:
+  - assumption_id: "[ref]"
+    result: HOLDS | WEAKENED | BROKEN
+    impact: "[description]"
+
+black_swans:
+  - event: "[description]"
+    type: POSITIVE | NEGATIVE
+    probability: VERY_LOW | LOW
+    impact: CATASTROPHIC | SEVERE | MODERATE | BENEFICIAL
+
+bias_check:
+  - bias_name: "[name]"
+    present: YES | NO | UNCLEAR
+    impact: NONE | MINOR | SIGNIFICANT | CRITICAL
+    remediation_applied: "[action]"
+
+fear_resolution: # Only if fear_analysis=on
+  - fear_id: "[ref]"
+    resolution_status: RESOLVED | ADDRESSED | REMAINS
+    minimal_test: [...]
+    growth_verdict: [...]
+
+summary:
+  beliefs_tested: [count]
+  beliefs_falsified: [count]
+  beliefs_survived: [count]
+  premortem_causes: [count]
+  black_swans_found: [count]
+  assumptions_stressed: [count]
+  biases_detected: [count]
+  counter_checks_performed: [count]
+  map_updates: ["[what changed based on challenge]", ...]
 ```
-╔═══════════════════════════════════════════════════════════════╗
-║  CHALLENGE RESULTS                                             ║
-╠═══════════════════════════════════════════════════════════════╣
-║                                                                ║
-║  Beliefs Tested:        [count]                                ║
-║  • Falsified:           [count]                                ║
-║  • Survived:            [count]                                ║
-║  • Modified:            [count]                                ║
-║                                                                ║
-║  Premortem Causes:      [count]                                ║
-║  Black Swans Found:     [count]                                ║
-║  Assumptions Stressed:  [count]                                ║
-║  Biases Detected:       [count]                                ║
-║  Counter-checks Done:   [count]                                ║
-║                                                                ║
-║  MAP UPDATES:                                                   ║
-║  • [what changed based on challenge]                           ║
-║                                                                ║
-╚═══════════════════════════════════════════════════════════════╝
 
 [RENDER_COMPLETE]
-```
 
 ---
 
-## POST-PHASE CHECKLIST (MANDATORY)
+## 04.9 POST-PHASE CHECKLIST
 
-```
-PHASE_04 COMPLETION CHECKLIST:
-
-□ ASSUMPTIONS_DECLARED logged?             [count: ___]
-□ EVR sequence respected?                  [Y/N — EXTRACT→VERIFY→RENDER]
-□ Falsification attempted on key beliefs?  [Y/N, count: ___]
-□ Premortem completed for top options?     [Y/N, count: ___]
-□ Black swan hunt performed?               [Y/N]
-□ Assumptions stress-tested?               [Y/N, count: ___]
-□ Bias checklist completed?                [Y/N, biases checked: ___]
-□ Counter-checks performed?               [count: ___ (min: ___)]
-□ Map updated with challenge findings?     [Y/N]
-□ Fear resolution done (if on)?            [Y/N or N/A]
+□ All outputs produced? [Y/N — list missing if N]
+□ ASSUMPTIONS_DECLARED logged? [count ≥ 1]
+□ EVR sequence respected? [Y/N — EXTRACT→VERIFY→RENDER]
+□ Counter-checks performed? [count ≥ min per depth]
+□ Key claims marked ★? [count ≥ 1]
+□ ASSUMED items flagged? [Y/N]
+□ Artifacts schema-compliant? [Y/N]
+□ Falsification attempted on key beliefs? [Y/N]
+□ Premortem completed for top options? [Y/N]
+□ Bias checklist completed? [Y/N — standard/deep only]
+□ Fear resolution done? [Y/N or N/A if fear_analysis=off]
+□ Map updated with challenge findings? [Y/N]
 
 CHECKLIST_STATUS: PASS | FAIL
-IF FAIL: Fix before proceeding.
-```
+
+IF FAIL: Fix issues before proceeding.
 
 ---
 
-## GATE_04: CHALLENGE EXIT
+## 04.10 GATE_04 CONDITIONS
 
-```
-GATE_04 BINDING CHECK:
+CRITICAL (must pass):
+□ Key beliefs falsification-tested — IF FAIL → SCOPE_REDUCTION_DECLARATION required
+□ Premortem completed for top options — IF FAIL → SCOPE_REDUCTION_DECLARATION required
+□ Post-phase checklist PASSED — IF FAIL → fix issues
 
-□ Key beliefs falsification-tested         — [PASS/FAIL] — CRITICAL
-□ Premortem completed for top options      — [PASS/FAIL] — CRITICAL
-□ Assumption stress test done              — [PASS/FAIL] — REQUIRED
-□ Bias checklist completed                 — [PASS/FAIL] — REQUIRED (standard/deep)
-□ Counter-checks on challenge findings     — [PASS/FAIL] — REQUIRED
-□ Post-phase checklist PASSED              — [PASS/FAIL] — CRITICAL
+REQUIRED (should pass):
+□ Assumption stress test done — IF FAIL → log + flag in process_log
+□ Bias checklist completed (standard/deep) — IF FAIL → log + flag in process_log
+□ Counter-checks ≥ minimum — IF FAIL → perform additional checks
 
-GATE_04 STATUS: OPEN | LOCKED
-```
+GATE_STATUS: OPEN | LOCKED
+
+IF LOCKED: Cannot proceed. Fix issues or execute SCOPE_REDUCTION protocol.
 
 ---
 
-## Transition
+## 04.11 TRANSITION
 
-- **If GATE_04 = OPEN and challenge passed** → Proceed to Step 5
-- **If challenge reveals FUNDAMENTAL reframe needed** → Return to Step 0 (rare)
-- **If challenge reveals ALL options fatally flawed** → ABORT exploration
+IF GATE_04 = OPEN:
+  → Load next step file: steps/step-05-synthesize.md
+  → Continue to Phase 5
 
-**Note:** Challenge normally leads forward. Backward transition requires:
-- Discovery that core problem was misunderstood
-- Evidence that continuing would waste effort
-- User agreement to restart
+IF GATE_04 = LOCKED AND challenge reveals fundamental reframe needed:
+  → Return to Step 0 (rare — requires user agreement)
+
+IF challenge reveals ALL options fatally flawed:
+  → ABORT exploration (document in process_log)
