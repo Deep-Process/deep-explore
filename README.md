@@ -1,6 +1,6 @@
 
 
-# [Project moved to one repo - deep process]([img/logo_small.png](https://github.com/Deep-Process/deep-process))
+# [Project moved to one repo - deep process]([https://github.com/Deep-Process/deep-process)](https://github.com/Deep-Process/deep-process/blob/main/src/deep-explore/docs/README.md)
 
 
 ## License
