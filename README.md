@@ -1,5 +1,8 @@
+
+<a href="https://example.com" style="color:red;">Project moved to https://github.com/Deep-Process/deep-process</a>
+
 # Deep Explore
-![Deep Explore Logo](img/logo_small.png)
+
 
 A structured decision exploration workflow for LLM-assisted thinking.
 
