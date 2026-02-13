@@ -1,5 +1,7 @@
 
-<a href="https://example.com" style="color:red;">Project moved to https://github.com/Deep-Process/deep-process</a>
+
+<span style="color:red">[Project moved to one repo - deep process]([https://example.com](https://github.com/Deep-Process/deep-process))</span>
+
 
 # Deep Explore
 
